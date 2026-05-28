@@ -4,125 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>StickyStack Prototype</title>
+    <base href="/" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Kalam:wght@400;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="app-shell">
-      <header class="hero">
-        <div>
-          <p class="eyebrow">StickyStack prototype</p>
-          <h1 id="page-title">Organize projects with tactile sticky notes.</h1>
-          <p id="page-subtitle" class="subtitle">Create a project, jump into its board, and move color-coded tasks through custom swim lanes.</p>
-        </div>
-        <div class="header-actions">
-          <button id="back-home" class="ghost hidden" type="button">← Projects</button>
-          <button id="open-project-modal" class="primary" type="button">+ New project</button>
-          <button id="open-lane-modal" class="primary hidden" type="button">+ Add swim lane</button>
-          <button id="open-note-modal" class="accent hidden" type="button">+ Add note</button>
-        </div>
-      </header>
-
-      <main>
-        <section id="home-view" class="view active" aria-labelledby="projects-heading">
-          <div class="section-heading">
-            <div>
-              <h2 id="projects-heading">Projects</h2>
-              <p>Each project starts as a sticky note on your home wall.</p>
-            </div>
-          </div>
-          <div id="project-grid" class="sticky-grid"></div>
-        </section>
-
-        <section id="board-view" class="view" aria-labelledby="board-heading">
-          <div class="section-heading board-meta">
-            <div>
-              <p class="eyebrow">Active project</p>
-              <h2 id="board-heading"></h2>
-              <p id="board-description"></p>
-            </div>
-            <div id="board-stats" class="stats"></div>
-          </div>
-          <div id="lane-board" class="lane-board" aria-live="polite"></div>
-        </section>
-      </main>
-    </div>
-
-    <dialog id="project-modal" class="modal">
-      <form id="project-form" method="dialog" class="modal-card">
-        <div class="modal-header">
-          <h2>Create project</h2>
-          <button class="icon-button" type="button" data-close="project-modal" aria-label="Close project form">×</button>
-        </div>
-        <label>
-          Project name
-          <input id="project-name" required maxlength="48" placeholder="Launch plan" />
-        </label>
-        <label>
-          Project description
-          <textarea id="project-description" maxlength="180" placeholder="A short note about the board goal"></textarea>
-        </label>
-        <label>
-          Sticky color
-          <select id="project-color"></select>
-        </label>
-        <button class="primary full" type="submit">Create project</button>
-      </form>
-    </dialog>
-
-    <dialog id="lane-modal" class="modal">
-      <form id="lane-form" method="dialog" class="modal-card">
-        <div class="modal-header">
-          <h2>Add swim lane</h2>
-          <button class="icon-button" type="button" data-close="lane-modal" aria-label="Close lane form">×</button>
-        </div>
-        <label>
-          Lane / status name
-          <input id="lane-name" required maxlength="36" placeholder="Blocked" />
-        </label>
-        <button class="primary full" type="submit">Add swim lane</button>
-      </form>
-    </dialog>
-
-    <dialog id="note-modal" class="modal">
-      <form id="note-form" method="dialog" class="modal-card">
-        <div class="modal-header">
-          <h2 id="note-modal-title">Add note</h2>
-          <button class="icon-button" type="button" data-close="note-modal" aria-label="Close note form">×</button>
-        </div>
-        <input id="note-id" type="hidden" />
-        <label>
-          Front description
-          <input id="note-title" required maxlength="72" placeholder="Draft user interview script" />
-        </label>
-        <label>
-          Back details
-          <textarea id="note-details" maxlength="320" placeholder="Prompts, acceptance criteria, links, or next steps"></textarea>
-        </label>
-        <div class="form-row">
-          <label>
-            Status / swim lane
-            <select id="note-status"></select>
-          </label>
-          <label>
-            Note color
-            <select id="note-color"></select>
-          </label>
-        </div>
-        <button class="accent full" type="submit">Save note</button>
-      </form>
-    </dialog>
-
-    <template id="empty-state-template">
-      <div class="empty-state">
-        <div class="empty-stack" aria-hidden="true"></div>
-        <h3></h3>
-        <p></p>
-      </div>
-    </template>
-
-    <script src="app.js" defer></script>
+    <app-root></app-root>
   </body>
 </html>

@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json.schemastore.org/angular-cli",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "stickystack": {
+      "projectType": "application",
+      "schematics": {},
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "src/main.ts",
+            "index": "index.html",
+            "styles": [
+              "src/styles.css"
+            ],
+            "tsConfig": "tsconfig.app.json",
+            "outputPath": "dist/stickystack",
+            "polyfills": [
+              "zone.js"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "stickystack:build:production"
+            },
+            "development": {
+              "buildTarget": "stickystack:build:development"
+            }
+          },
+          "defaultConfiguration": "development",
+          "options": {
+            "port": 4173,
+            "host": "0.0.0.0"
+          }
+        }
+      }
+    }
+  }
+}
