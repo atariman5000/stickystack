@@ -1,0 +1,182 @@
+<div class="app-shell">
+  <header class="hero">
+    <div>
+      <p class="eyebrow">StickyStack prototype</p>
+      <h1 id="page-title">{{ pageTitle }}</h1>
+      <p id="page-subtitle" class="subtitle">{{ pageSubtitle }}</p>
+    </div>
+    <div class="header-actions">
+      <button *ngIf="isBoardView" id="back-home" class="ghost" type="button" (click)="showHome()">← Projects</button>
+      <button *ngIf="!isBoardView" id="open-project-modal" class="primary" type="button" (click)="openProjectForm()">+ New project</button>
+      <button *ngIf="isBoardView" id="open-lane-modal" class="primary" type="button" (click)="openLaneForm()">+ Add swim lane</button>
+      <button *ngIf="isBoardView" id="open-note-modal" class="accent" type="button" (click)="openNoteForm()">+ Add note</button>
+    </div>
+  </header>
+
+  <main>
+    <section *ngIf="!isBoardView" id="home-view" class="view active" aria-labelledby="projects-heading">
+      <div class="section-heading">
+        <div>
+          <h2 id="projects-heading">Projects</h2>
+          <p>Each project starts as a sticky note on your home wall.</p>
+        </div>
+      </div>
+
+      <div id="project-grid" class="sticky-grid">
+        <ng-container *ngIf="state.projects.length; else noProjects">
+          <button
+            *ngFor="let project of state.projects; let index = index"
+            class="project-note"
+            type="button"
+            [style.background]="project.color"
+            [style.--tilt]="projectTilt(index)"
+            (click)="showBoard(project.id)"
+          >
+            <h3>{{ project.name }}</h3>
+            <p>{{ project.description || 'Click to open this project board.' }}</p>
+            <span class="project-note-meta">{{ project.notes.length }} notes · {{ project.lanes.length }} lanes</span>
+          </button>
+        </ng-container>
+      </div>
+    </section>
+
+    <section *ngIf="activeProject as project" id="board-view" class="view active" aria-labelledby="board-heading">
+      <div class="section-heading board-meta">
+        <div>
+          <p class="eyebrow">Active project</p>
+          <h2 id="board-heading">{{ project.name }}</h2>
+          <p id="board-description">{{ project.description || 'A flexible sticky-note board for this project.' }}</p>
+        </div>
+        <div id="board-stats" class="stats">
+          <span class="stat-pill">{{ project.notes.length }} notes</span>
+          <span class="stat-pill">{{ project.lanes.length }} swim lanes</span>
+          <span class="stat-pill">{{ doneCount(project) }} done</span>
+        </div>
+      </div>
+
+      <div id="lane-board" class="lane-board" aria-live="polite">
+        <section *ngFor="let lane of project.lanes" class="lane">
+          <div class="lane-header">
+            <h3 class="lane-title">{{ lane }}</h3>
+            <span class="lane-count">{{ notesForLane(project, lane).length }}</span>
+          </div>
+          <div class="note-stack">
+            <ng-container *ngIf="notesForLane(project, lane) as laneNotes">
+              <p *ngIf="!laneNotes.length" class="lane-placeholder">No notes in this lane yet.</p>
+              <article
+                *ngFor="let note of laneNotes"
+                class="note-card"
+                [class.flipped]="isNoteFlipped(note.id)"
+                (click)="toggleNoteFlip(note.id)"
+              >
+                <div class="note-inner">
+                  <div class="note-face note-front" [style.background]="note.color">
+                    <h3>{{ note.title }}</h3>
+                    <p>Click to flip for details.</p>
+                    <div class="note-actions" (click)="$event.stopPropagation()">
+                      <select class="note-status" [ngModel]="note.status" (ngModelChange)="updateNoteStatus(note, $event)" [attr.aria-label]="'Move ' + note.title + ' to status'">
+                        <option *ngFor="let status of project.lanes" [value]="status">{{ status }}</option>
+                      </select>
+                      <button class="mini-button" type="button" (click)="openNoteForm(note)">Edit</button>
+                      <button class="danger" type="button" (click)="deleteNote(project, note)">Delete</button>
+                    </div>
+                  </div>
+                  <div class="note-face note-back" [style.background]="note.color">
+                    <h3>Details</h3>
+                    <p>{{ note.details || 'No extra details yet.' }}</p>
+                    <div class="note-actions" (click)="$event.stopPropagation()">
+                      <select class="note-status" [ngModel]="note.status" (ngModelChange)="updateNoteStatus(note, $event)" [attr.aria-label]="'Move ' + note.title + ' to status'">
+                        <option *ngFor="let status of project.lanes" [value]="status">{{ status }}</option>
+                      </select>
+                      <button class="mini-button" type="button" (click)="openNoteForm(note)">Edit</button>
+                      <button class="danger" type="button" (click)="deleteNote(project, note)">Delete</button>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            </ng-container>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+</div>
+
+<dialog #projectModal id="project-modal" class="modal">
+  <form #projectFormRef="ngForm" method="dialog" class="modal-card" (ngSubmit)="createProject(projectFormRef)">
+    <div class="modal-header">
+      <h2>Create project</h2>
+      <button class="icon-button" type="button" aria-label="Close project form" (click)="closeDialog(projectModal)">×</button>
+    </div>
+    <label>
+      Project name
+      <input name="projectName" [(ngModel)]="projectForm.name" required maxlength="48" placeholder="Launch plan" />
+    </label>
+    <label>
+      Project description
+      <textarea name="projectDescription" [(ngModel)]="projectForm.description" maxlength="180" placeholder="A short note about the board goal"></textarea>
+    </label>
+    <label>
+      Sticky color
+      <select name="projectColor" [(ngModel)]="projectForm.color">
+        <option *ngFor="let color of palette" [value]="color.value">{{ color.name }}</option>
+      </select>
+    </label>
+    <button class="primary full" type="submit">Create project</button>
+  </form>
+</dialog>
+
+<dialog #laneModal id="lane-modal" class="modal">
+  <form #laneFormRef="ngForm" method="dialog" class="modal-card" (ngSubmit)="addLane(laneFormRef)">
+    <div class="modal-header">
+      <h2>Add swim lane</h2>
+      <button class="icon-button" type="button" aria-label="Close lane form" (click)="closeDialog(laneModal)">×</button>
+    </div>
+    <label>
+      Lane / status name
+      <input name="laneName" [(ngModel)]="laneName" required maxlength="36" placeholder="Blocked" />
+    </label>
+    <button class="primary full" type="submit">Add swim lane</button>
+  </form>
+</dialog>
+
+<dialog #noteModal id="note-modal" class="modal">
+  <form #noteFormRef="ngForm" method="dialog" class="modal-card" (ngSubmit)="saveNote(noteFormRef)">
+    <div class="modal-header">
+      <h2 id="note-modal-title">{{ noteModalTitle }}</h2>
+      <button class="icon-button" type="button" aria-label="Close note form" (click)="closeDialog(noteModal)">×</button>
+    </div>
+    <input name="noteId" [(ngModel)]="noteForm.id" type="hidden" />
+    <label>
+      Front description
+      <input name="noteTitle" [(ngModel)]="noteForm.title" required maxlength="72" placeholder="Draft user interview script" />
+    </label>
+    <label>
+      Back details
+      <textarea name="noteDetails" [(ngModel)]="noteForm.details" maxlength="320" placeholder="Prompts, acceptance criteria, links, or next steps"></textarea>
+    </label>
+    <div class="form-row">
+      <label>
+        Status / swim lane
+        <select name="noteStatus" [(ngModel)]="noteForm.status">
+          <option *ngFor="let status of activeProject?.lanes ?? []" [value]="status">{{ status }}</option>
+        </select>
+      </label>
+      <label>
+        Note color
+        <select name="noteColor" [(ngModel)]="noteForm.color">
+          <option *ngFor="let color of palette" [value]="color.value">{{ color.name }}</option>
+        </select>
+      </label>
+    </div>
+    <button class="accent full" type="submit">Save note</button>
+  </form>
+</dialog>
+
+<ng-template #noProjects>
+  <div class="empty-state">
+    <div class="empty-stack" aria-hidden="true"></div>
+    <h3>No projects yet</h3>
+    <p>Create a sticky-note project to start shaping your board.</p>
+  </div>
+</ng-template>
