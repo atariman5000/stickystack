@@ -1,7 +1,11 @@
 <article
   class="note-card"
   [class.flipped]="isFlipped"
-  (click)="flipped.emit()"
+  [class.dragging]="isDragging"
+  draggable="true"
+  (click)="handleClick()"
+  (dragstart)="handleDragStart($event)"
+  (dragend)="handleDragEnd()"
 >
   <div class="note-inner">
     <div

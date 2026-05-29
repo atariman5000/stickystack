@@ -18,6 +18,9 @@ export class ProjectBoardComponent {
   @Output() noteEdited = new EventEmitter<StickyNote>();
   @Output() noteDeleted = new EventEmitter<StickyNote>();
 
+  draggedNoteId: string | null = null;
+  dragOverLane: string | null = null;
+
   notesForLane(project: Project, lane: string): StickyNote[] {
     return project.notes.filter((note) => note.status === lane);
   }
@@ -28,5 +31,50 @@ export class ProjectBoardComponent {
 
   isNoteFlipped(noteId: string): boolean {
     return this.flippedNoteIds.has(noteId);
+  }
+
+  startNoteDrag(noteId: string): void {
+    this.draggedNoteId = noteId;
+  }
+
+  endNoteDrag(): void {
+    this.draggedNoteId = null;
+    this.dragOverLane = null;
+  }
+
+  allowLaneDrop(event: DragEvent, lane: string): void {
+    if (!this.draggedNoteId) {
+      return;
+    }
+
+    event.preventDefault();
+    if (event.dataTransfer) {
+      event.dataTransfer.dropEffect = 'move';
+    }
+    this.dragOverLane = lane;
+  }
+
+  leaveLane(event: DragEvent, lane: string): void {
+    if (!event.currentTarget || !event.relatedTarget) {
+      this.dragOverLane = null;
+      return;
+    }
+
+    const laneElement = event.currentTarget as HTMLElement;
+    if (!laneElement.contains(event.relatedTarget as Node) && this.dragOverLane === lane) {
+      this.dragOverLane = null;
+    }
+  }
+
+  dropNoteInLane(event: DragEvent, lane: string): void {
+    event.preventDefault();
+    const noteId = event.dataTransfer?.getData('text/plain') || this.draggedNoteId;
+    const note = this.project.notes.find((candidate) => candidate.id === noteId);
+
+    if (note && note.status !== lane) {
+      this.noteStatusChanged.emit({ note, status: lane });
+    }
+
+    this.endNoteDrag();
   }
 }

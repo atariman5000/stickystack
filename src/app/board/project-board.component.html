@@ -22,7 +22,14 @@
   </div>
 
   <div id="lane-board" class="lane-board" aria-live="polite">
-    <section *ngFor="let lane of project.lanes" class="lane">
+    <section
+      *ngFor="let lane of project.lanes"
+      class="lane"
+      [class.drag-over]="dragOverLane === lane"
+      (dragover)="allowLaneDrop($event, lane)"
+      (dragleave)="leaveLane($event, lane)"
+      (drop)="dropNoteInLane($event, lane)"
+    >
       <div class="lane-header">
         <h3 class="lane-title">{{ lane }}</h3>
         <span class="lane-count">{{
@@ -39,7 +46,10 @@
             [note]="note"
             [lanes]="project.lanes"
             [isFlipped]="isNoteFlipped(note.id)"
+            [isDragging]="draggedNoteId === note.id"
             (flipped)="noteFlipped.emit(note.id)"
+            (dragStarted)="startNoteDrag(note.id)"
+            (dragEnded)="endNoteDrag()"
             (statusChanged)="noteStatusChanged.emit({ note, status: $event })"
             (edited)="noteEdited.emit(note)"
             (deleted)="noteDeleted.emit(note)"

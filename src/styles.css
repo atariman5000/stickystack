@@ -151,7 +151,7 @@ button:hover { transform: translateY(-2px); }
   pointer-events: none;
 }
 
-.project-note h3, .note-card h3 { font-size: 1.72rem; line-height: 1.05; }
+.project-note h3, .note-card h3 { font-size: 1.72rem; line-height: 1.05; margin-bottom: 4px; }
 .project-note p, .note-card p { font-size: 1.08rem; line-height: 1.35; }
 .project-note-meta { position: absolute; bottom: 18px; left: 22px; right: 22px; color: rgba(47, 41, 26, 0.72); font-family: Inter, sans-serif; font-size: 0.82rem; font-weight: 800; }
 
@@ -170,6 +170,13 @@ button:hover { transform: translateY(-2px); }
   border: 1px dashed rgba(23, 32, 51, 0.18);
   border-radius: 28px;
   background: rgba(255, 255, 255, 0.58);
+  transition: border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
+}
+
+.lane.drag-over {
+  border-color: rgba(23, 32, 51, 0.42);
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: inset 0 0 0 2px rgba(255, 207, 69, 0.58);
 }
 
 .lane-header {
@@ -184,17 +191,19 @@ button:hover { transform: translateY(-2px); }
 .lane-count { display: inline-grid; place-items: center; min-width: 34px; height: 34px; border-radius: 50%; background: white; font-weight: 800; }
 
 .note-stack { display: grid; gap: 16px; }
-.note-card { min-height: 232px; perspective: 1000px; }
-.note-inner { position: relative; min-height: 232px; transition: transform 520ms cubic-bezier(.2,.8,.2,1); transform-style: preserve-3d; }
+.note-card { min-height: 282px; perspective: 1000px; cursor: grab; }
+.note-card.dragging { cursor: grabbing; opacity: 0.58; }
+.note-inner { position: relative; min-height: inherit; transition: transform 520ms cubic-bezier(.2,.8,.2,1); transform-style: preserve-3d; }
 .note-card.flipped .note-inner { transform: rotateY(180deg); }
-.note-face { position: absolute; inset: 0; display: flex; flex-direction: column; border-radius: 6px 26px 6px 22px; backface-visibility: hidden; }
+.note-face { position: absolute; inset: 0; display: flex; flex-direction: column; overflow: hidden; border-radius: 6px 26px 6px 22px; backface-visibility: hidden; }
 .note-back { transform: rotateY(180deg); }
 
-.note-actions { display: flex; gap: 8px; margin-top: auto; padding-top: 14px; align-items: center; flex-wrap: wrap; font-family: Inter, sans-serif; }
+.note-actions { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin-top: auto; padding-top: 14px; align-items: center; font-family: Inter, sans-serif; }
 .note-status { width: 100%; border: 1px solid rgba(47, 41, 26, 0.18); border-radius: 14px; padding: 8px 10px; background: rgba(255,255,255,0.58); font-weight: 700; }
+.note-status { grid-column: 1 / -1; }
 .mini-button, .danger { padding: 8px 11px; font-size: 0.8rem; }
 .mini-button { background: rgba(255,255,255,0.62); color: #2f291a; }
-.danger { margin-left: auto; background: #ffe1e1; color: #9a2626; }
+.danger { justify-self: end; background: #ffe1e1; color: #9a2626; }
 
 .stats { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
 .stat-pill { padding: 10px 13px; border-radius: 999px; background: white; font-weight: 800; color: var(--muted); }
