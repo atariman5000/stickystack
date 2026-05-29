@@ -11,7 +11,7 @@ npm install
 npm start
 ```
 
-Then open <http://localhost:4173>.
+Then open <http://localhost:4200>.
 
 ## Useful scripts
 
