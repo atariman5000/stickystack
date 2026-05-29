@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NoteCardComponent } from '../note-card/note-card.component';
+import { projectTemplates } from '../app.constants';
 import { Project, StickyNote } from '../models';
 
 @Component({
@@ -27,6 +28,10 @@ export class ProjectBoardComponent {
 
   doneCount(project: Project): number {
     return project.notes.filter((note) => note.status === 'Done').length;
+  }
+
+  templateLabel(project: Project): string {
+    return projectTemplates.find((template) => template.type === project.templateType)?.label ?? 'Simple Kanban';
   }
 
   isNoteFlipped(noteId: string): boolean {

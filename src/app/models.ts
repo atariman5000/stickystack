@@ -1,3 +1,12 @@
+export type BoardType = 'kanban' | 'storyMap' | 'roadmap' | 'retrospective' | 'canvas' | 'prioritization' | 'mindMap';
+
+export interface ProjectTemplate {
+  type: BoardType;
+  label: string;
+  description: string;
+  lanes: string[];
+}
+
 export interface StickyNote {
   id: string;
   title: string;
@@ -11,6 +20,7 @@ export interface Project {
   name: string;
   description: string;
   color: string;
+  templateType: BoardType;
   lanes: string[];
   notes: StickyNote[];
 }
@@ -23,6 +33,7 @@ export interface ProjectFormModel {
   name: string;
   description: string;
   color: string;
+  templateType: BoardType;
 }
 
 export interface NoteFormModel {

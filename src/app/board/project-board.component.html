@@ -13,6 +13,7 @@
     <div>
       <p class="eyebrow">Active project</p>
       <h2 id="board-heading">{{ project.name }}</h2>
+      <span class="template-badge board-template">{{ templateLabel(project) }}</span>
       <p id="board-description">
         {{
           project.description ||
@@ -22,7 +23,7 @@
     </div>
     <div id="board-stats" class="stats">
       <span class="stat-pill">{{ project.notes.length }} notes</span>
-      <span class="stat-pill">{{ project.lanes.length }} swim lanes</span>
+      <span class="stat-pill">{{ project.lanes.length }} sections</span>
       <span class="stat-pill">{{ doneCount(project) }} done</span>
     </div>
   </div>

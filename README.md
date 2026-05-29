@@ -1,6 +1,6 @@
 # StickyStack
 
-StickyStack is an Angular prototype for organizing work with Post-it style project boards. The home screen shows each project as a sticky note. Opening a project reveals swim lanes where task notes can be added, deleted, edited, flipped for details, and moved automatically by changing their status.
+StickyStack is an Angular prototype for organizing work with Post-it style project boards. The home screen shows each project as a sticky note with its selected board template. Opening a project reveals template-defined sections where task notes can be added, deleted, edited, flipped for details, and moved automatically by changing their status.
 
 ## Run locally
 
@@ -26,9 +26,11 @@ See [`docs/cardboardit-parity-roadmap.md`](docs/cardboardit-parity-roadmap.md) f
 
 ## Prototype scope
 
-- Create projects from the home wall.
+- Create projects from the home wall with a board template.
+- Start from Simple Kanban, User Story Map, Product Roadmap, Opportunity Canvas, Sailboat Retro, or 2x2 Prioritization Matrix templates.
 - Add custom swim lanes inside each project.
 - Add, edit, delete, and color-code notes.
 - Click a note to flip between the front description and back details.
-- Change a note's status to move it to the matching swim lane.
+- Change a note's status to move it to the matching section.
 - Persist prototype data in `localStorage`.
+- Migrate older saved projects without template data into Simple Kanban boards.

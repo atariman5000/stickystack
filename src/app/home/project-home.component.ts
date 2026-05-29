@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { projectTemplates } from '../app.constants';
 import { Project } from '../models';
 
 @Component({
@@ -17,5 +18,13 @@ export class ProjectHomeComponent {
 
   projectTilt(index: number): string {
     return `${this.tiltValues[index % this.tiltValues.length]}deg`;
+  }
+
+  templateLabel(project: Project): string {
+    return projectTemplates.find((template) => template.type === project.templateType)?.label ?? 'Simple Kanban';
+  }
+
+  templateDescription(project: Project): string {
+    return projectTemplates.find((template) => template.type === project.templateType)?.description ?? 'Track work through a lightweight backlog, in-progress, and done flow.';
   }
 }

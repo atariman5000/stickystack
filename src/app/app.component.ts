@@ -6,8 +6,8 @@ import { NoteDialogComponent } from './dialogs/note-dialog.component';
 import { ProjectBoardComponent } from './board/project-board.component';
 import { ProjectDialogComponent } from './dialogs/project-dialog.component';
 import { ProjectHomeComponent } from './home/project-home.component';
-import { STORAGE_KEY, defaultLanes } from './app.constants';
-import { NoteFormModel, Project, ProjectFormModel, StickyNote, StickyStackState } from './models';
+import { STORAGE_KEY, defaultLanes, projectTemplates } from './app.constants';
+import { BoardType, NoteFormModel, Project, ProjectFormModel, StickyNote, StickyStackState } from './models';
 
 @Component({
   selector: 'app-root',
@@ -65,12 +65,14 @@ export class AppComponent {
   }
 
   createProject(projectForm: ProjectFormModel): void {
+    const template = this.templateFor(projectForm.templateType);
     const project: Project = {
       id: crypto.randomUUID(),
       name: projectForm.name,
       description: projectForm.description,
       color: projectForm.color,
-      lanes: [...defaultLanes],
+      templateType: template.type,
+      lanes: [...template.lanes],
       notes: []
     };
 
@@ -161,7 +163,12 @@ export class AppComponent {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       try {
-        return JSON.parse(saved) as StickyStackState;
+        const parsedState = JSON.parse(saved) as Partial<StickyStackState>;
+        const migratedState = this.migrateState(parsedState);
+        if (JSON.stringify(parsedState) !== JSON.stringify(migratedState)) {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(migratedState));
+        }
+        return migratedState;
       } catch (error) {
         console.warn('Could not parse saved StickyStack data. Loading starter project.', error);
       }
@@ -174,7 +181,8 @@ export class AppComponent {
           name: 'Prototype roadmap',
           description: 'Try the sticky-note project workflow and tune the lanes.',
           color: '#fff18a',
-          lanes: [...defaultLanes],
+          templateType: 'kanban',
+          lanes: [...this.templateFor('kanban').lanes],
           notes: [
             {
               id: crypto.randomUUID(),
@@ -201,6 +209,60 @@ export class AppComponent {
         }
       ]
     };
+  }
+
+  private migrateState(state: Partial<StickyStackState>): StickyStackState {
+    const projects = Array.isArray(state.projects)
+      ? state.projects.map((project) => this.migrateProject(project as Partial<Project>))
+      : [];
+
+    return { projects };
+  }
+
+  private migrateProject(project: Partial<Project>): Project {
+    const template = this.templateFor(project.templateType);
+    const lanes = this.migrateLanes(project.lanes, template.lanes);
+
+    return {
+      id: project.id || crypto.randomUUID(),
+      name: project.name || 'Untitled project',
+      description: project.description || '',
+      color: project.color || '#fff18a',
+      templateType: template.type,
+      lanes,
+      notes: this.migrateNotes(project.notes, lanes)
+    };
+  }
+
+  private migrateLanes(lanes: unknown, fallbackLanes: string[]): string[] {
+    if (Array.isArray(lanes) && lanes.every((lane) => typeof lane === 'string') && lanes.length) {
+      return lanes;
+    }
+
+    return [...fallbackLanes];
+  }
+
+  private migrateNotes(notes: unknown, lanes: string[]): StickyNote[] {
+    if (!Array.isArray(notes)) {
+      return [];
+    }
+
+    const fallbackStatus = lanes[0] ?? defaultLanes[0];
+    return notes.map((note) => {
+      const savedNote = note as Partial<StickyNote>;
+
+      return {
+        id: savedNote.id || crypto.randomUUID(),
+        title: savedNote.title || 'Untitled note',
+        details: savedNote.details || '',
+        status: savedNote.status || fallbackStatus,
+        color: savedNote.color || '#fff18a'
+      };
+    });
+  }
+
+  private templateFor(type: BoardType | undefined) {
+    return projectTemplates.find((template) => template.type === type) ?? projectTemplates[0];
   }
 
   private saveState(): void {

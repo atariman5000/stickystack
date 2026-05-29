@@ -6,7 +6,7 @@
   "scripts": {
     "start": "ng serve",
     "build": "ng build",
-    "check": "python3 -m py_compile tests/smoke.py && python3 tests/smoke.py"
+    "check": "python -m py_compile tests/smoke.py && python tests/smoke.py"
   },
   "dependencies": {
     "@angular/animations": "^20.0.0",

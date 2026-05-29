@@ -125,7 +125,7 @@ button:hover { transform: translateY(-2px); }
 
 .project-note, .note-face {
   position: relative;
-  min-height: 210px;
+  min-height: 244px;
   padding: 22px;
   border: 0;
   color: #2f291a;
@@ -153,6 +153,9 @@ button:hover { transform: translateY(-2px); }
 
 .project-note h3, .note-card h3 { font-size: 1.72rem; line-height: 1.05; margin-bottom: 4px; }
 .project-note p, .note-card p { font-size: 1.08rem; line-height: 1.35; }
+.template-badge { display: inline-flex; max-width: 100%; margin-bottom: 12px; padding: 6px 10px; border-radius: 999px; background: rgba(255,255,255,0.66); color: rgba(47, 41, 26, 0.78); font-family: Inter, sans-serif; font-size: 0.72rem; font-weight: 900; line-height: 1; }
+.board-template { margin-bottom: 10px; color: var(--muted); }
+.project-template-description { display: block; margin-top: 10px; padding-bottom: 38px; color: rgba(47, 41, 26, 0.72); font-family: Inter, sans-serif; font-size: 0.78rem; font-weight: 800; line-height: 1.35; }
 .project-note-meta { position: absolute; bottom: 18px; left: 22px; right: 22px; color: rgba(47, 41, 26, 0.72); font-family: Inter, sans-serif; font-size: 0.82rem; font-weight: 800; }
 
 .lane-board {
@@ -245,6 +248,10 @@ button:hover { transform: translateY(-2px); }
 label { display: grid; gap: 8px; margin: 16px 0; color: var(--muted); font-weight: 800; }
 input, textarea, select { width: 100%; border: 1px solid var(--line); border-radius: 16px; padding: 13px 14px; background: white; color: var(--ink); }
 textarea { min-height: 120px; resize: vertical; }
+.template-preview { display: grid; gap: 6px; margin: -4px 0 16px; padding: 14px; border: 1px solid var(--line); border-radius: 18px; background: rgba(255,255,255,0.64); color: var(--muted); }
+.template-preview:empty { display: none; }
+.template-preview strong { color: var(--ink); }
+.template-preview small { line-height: 1.35; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .full { width: 100%; }
 

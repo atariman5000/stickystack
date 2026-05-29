@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { palette } from '../app.constants';
+import { palette, projectTemplates } from '../app.constants';
 import { ProjectFormModel } from '../models';
 
 @Component({
@@ -17,6 +17,7 @@ export class ProjectDialogComponent {
   @Output() projectCreated = new EventEmitter<ProjectFormModel>();
 
   readonly palette = palette;
+  readonly projectTemplates = projectTemplates;
   projectForm: ProjectFormModel = this.emptyProjectForm();
 
   open(): void {
@@ -33,7 +34,8 @@ export class ProjectDialogComponent {
     this.projectCreated.emit({
       name: this.projectForm.name.trim(),
       description: this.projectForm.description.trim(),
-      color: this.projectForm.color
+      color: this.projectForm.color,
+      templateType: this.projectForm.templateType
     });
     this.closeDialog();
     form.resetForm(this.emptyProjectForm());
@@ -53,7 +55,7 @@ export class ProjectDialogComponent {
   }
 
   private emptyProjectForm(): ProjectFormModel {
-    return { name: '', description: '', color: palette[0].value };
+    return { name: '', description: '', color: palette[0].value, templateType: projectTemplates[0].type };
   }
 
   private showModal(): void {

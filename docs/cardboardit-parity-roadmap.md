@@ -30,8 +30,11 @@ Keep this baseline stable while expanding the product in thin, testable slices.
 - Add data migrations whenever stored models change so existing `localStorage` users do not lose boards.
 - Prefer reusable board primitives over one-off template screens: cards, lanes, sections, dividers, connectors, comments, and metadata should work across board types.
 - Add promptable acceptance criteria to every phase so each implementation step can be tested before moving on.
+- Mark checklist items as complete as each milestone ships. A phase is done only when its build tasks, acceptance tests, checks, and documentation update are complete.
 
 ## Phase 1 — Board types and templates
+
+**Status:** [x] Complete
 
 ### Why
 
@@ -39,17 +42,16 @@ CardBoard-like tools are not just kanban boards. They provide starting structure
 
 ### Build
 
-- Add a `BoardType` or `ProjectTemplate` model with types such as `kanban`, `storyMap`, `roadmap`, `retrospective`, `canvas`, and `mindMap`.
-- Replace the fixed default lane set with template-defined sections.
-- Add a template picker when creating a project.
-- Seed templates for:
-  - Simple Kanban.
-  - User Story Map.
-  - Product Roadmap.
-  - Opportunity Canvas.
-  - Sailboat Retro.
-  - 2x2 Prioritization Matrix.
-- Show each project type on the home wall with a label and short description.
+- [x] Add a `BoardType` or `ProjectTemplate` model with types such as `kanban`, `storyMap`, `roadmap`, `retrospective`, `canvas`, and `mindMap`.
+- [x] Replace the fixed default lane set with template-defined sections.
+- [x] Add a template picker when creating a project.
+- [x] Seed the Simple Kanban template.
+- [x] Seed the User Story Map template.
+- [x] Seed the Product Roadmap template.
+- [x] Seed the Opportunity Canvas template.
+- [x] Seed the Sailboat Retro template.
+- [x] Seed the 2x2 Prioritization Matrix template.
+- [x] Show each project type on the home wall with a label and short description.
 
 ### Prompt to implement
 
@@ -59,10 +61,10 @@ Add board template support to StickyStack. Introduce typed templates for kanban,
 
 ### Acceptance tests
 
-- Creating a project requires or defaults to a template.
-- Existing saved projects still load as kanban boards.
-- Each template creates the expected sections without breaking note CRUD.
-- Project cards display the selected template type.
+- [x] Creating a project requires or defaults to a template.
+- [x] Existing saved projects still load as kanban boards.
+- [x] Each template creates the expected sections without breaking note CRUD.
+- [x] Project cards display the selected template type.
 
 ### Suggested checks
 
@@ -71,7 +73,15 @@ npm run check
 npm run build
 ```
 
+### Completion checklist
+
+- [x] `npm run check` passes.
+- [x] `npm run build` passes.
+- [x] README or docs describe the new template capability.
+
 ## Phase 2 — Story-map layout and release slices
+
+**Status:** [ ] Not started
 
 ### Why
 
@@ -79,14 +89,13 @@ The most important CardBoard-style differentiator is a story map: a user journey
 
 ### Build
 
-- Add hierarchy fields to notes, such as `parentId`, `row`, `column`, `sortOrder`, and `cardType`.
-- Support story-map levels:
-  - Activities or backbone items.
-  - User tasks.
-  - Stories or implementation notes.
-- Add horizontal release dividers or slices, such as `MVP`, `Release 1`, and `Later`.
-- Allow notes to be moved within the map without losing their hierarchy.
-- Add an empty-state helper that explains how to build a story map.
+- [ ] Add hierarchy fields to notes, such as `parentId`, `row`, `column`, `sortOrder`, and `cardType`.
+- [ ] Support activities or backbone items.
+- [ ] Support user tasks.
+- [ ] Support stories or implementation notes.
+- [ ] Add horizontal release dividers or slices, such as `MVP`, `Release 1`, and `Later`.
+- [ ] Allow notes to be moved within the map without losing their hierarchy.
+- [ ] Add an empty-state helper that explains how to build a story map.
 
 ### Prompt to implement
 
@@ -96,10 +105,10 @@ Implement the Story Map board experience. Extend notes with hierarchy and orderi
 
 ### Acceptance tests
 
-- Story-map boards render in columns instead of status lanes.
-- Notes can be added under a selected activity or task.
-- Release slices appear and can be renamed.
-- Existing kanban boards are unaffected.
+- [ ] Story-map boards render in columns instead of status lanes.
+- [ ] Notes can be added under a selected activity or task.
+- [ ] Release slices appear and can be renamed.
+- [ ] Existing kanban boards are unaffected.
 
 ### Suggested checks
 
@@ -108,7 +117,15 @@ npm run check
 npm run build
 ```
 
+### Completion checklist
+
+- [ ] `npm run check` passes.
+- [ ] `npm run build` passes.
+- [ ] README or docs describe the story-map capability.
+
 ## Phase 3 — Rich card backs, attachments, tags, and estimates
+
+**Status:** [ ] Not started
 
 ### Why
 
@@ -116,18 +133,17 @@ Planning cards need more than a title and details field once they become the tea
 
 ### Build
 
-- Extend notes with:
-  - Description or acceptance criteria.
-  - Tags.
-  - Priority.
-  - Estimate.
-  - Assignee.
-  - Due date.
-  - Links.
-  - Lightweight attachment metadata.
-- Redesign the note dialog into tabs or sections: Summary, Details, Planning, Links.
-- Add filtering by tag, assignee, priority, and status.
-- Add search across titles and details.
+- [ ] Add description or acceptance criteria to notes.
+- [ ] Add tags to notes.
+- [ ] Add priority to notes.
+- [ ] Add estimate to notes.
+- [ ] Add assignee to notes.
+- [ ] Add due date to notes.
+- [ ] Add links to notes.
+- [ ] Add lightweight attachment metadata to notes.
+- [ ] Redesign the note dialog into tabs or sections: Summary, Details, Planning, Links.
+- [ ] Add filtering by tag, assignee, priority, and status.
+- [ ] Add search across titles and details.
 
 ### Prompt to implement
 
@@ -137,10 +153,10 @@ Upgrade StickyStack note cards into rich planning cards. Add fields for tags, pr
 
 ### Acceptance tests
 
-- Old notes migrate with empty optional metadata.
-- Users can create and edit all new card fields.
-- Filters combine predictably and can be cleared.
-- Card backs show useful metadata without overcrowding the card front.
+- [ ] Old notes migrate with empty optional metadata.
+- [ ] Users can create and edit all new card fields.
+- [ ] Filters combine predictably and can be cleared.
+- [ ] Card backs show useful metadata without overcrowding the card front.
 
 ### Suggested checks
 
@@ -149,7 +165,15 @@ npm run check
 npm run build
 ```
 
+### Completion checklist
+
+- [ ] `npm run check` passes.
+- [ ] `npm run build` passes.
+- [ ] README or docs describe the rich card and filtering capability.
+
 ## Phase 4 — Board links, dependencies, connectors, and zoomable structure
+
+**Status:** [ ] Not started
 
 ### Why
 
@@ -157,11 +181,11 @@ CardBoard-style tools help teams split complex planning into linked boards and v
 
 ### Build
 
-- Add board-to-board links with preview cards.
-- Add note dependencies or relationships, such as `blocks`, `blockedBy`, `relatesTo`, and `duplicates`.
-- Render connector lines between related notes where practical.
-- Add a side panel for dependency details if full canvas connectors become visually dense.
-- Add board-level breadcrumbs and linked-board navigation.
+- [ ] Add board-to-board links with preview cards.
+- [ ] Add note dependencies or relationships, such as `blocks`, `blockedBy`, `relatesTo`, and `duplicates`.
+- [ ] Render connector lines between related notes where practical.
+- [ ] Add a side panel for dependency details if full canvas connectors become visually dense.
+- [ ] Add board-level breadcrumbs and linked-board navigation.
 
 ### Prompt to implement
 
@@ -171,10 +195,10 @@ Add linked boards and card relationships. Let users connect one project board to
 
 ### Acceptance tests
 
-- A board can link to another board and navigate back.
-- Note relationships persist across refreshes.
-- Deleting a note or board cleans up orphaned relationships.
-- Relationship indicators are visible without making cards hard to read.
+- [ ] A board can link to another board and navigate back.
+- [ ] Note relationships persist across refreshes.
+- [ ] Deleting a note or board cleans up orphaned relationships.
+- [ ] Relationship indicators are visible without making cards hard to read.
 
 ### Suggested checks
 
@@ -183,7 +207,15 @@ npm run check
 npm run build
 ```
 
+### Completion checklist
+
+- [ ] `npm run check` passes.
+- [ ] `npm run build` passes.
+- [ ] README or docs describe linked boards and relationships.
+
 ## Phase 5 — Collaboration-ready local features
+
+**Status:** [ ] Not started
 
 ### Why
 
@@ -191,12 +223,12 @@ Before adding real-time multi-user collaboration, add collaboration concepts tha
 
 ### Build
 
-- Add comment threads on notes.
-- Add board-level annotations or facilitator notes.
-- Add voting sessions with configurable vote limits.
-- Add a simple timer for workshops.
-- Add presenter/facilitator mode for focusing the room on one card or section.
-- Add guest/share-link UI placeholders that explain what will require backend support later.
+- [ ] Add comment threads on notes.
+- [ ] Add board-level annotations or facilitator notes.
+- [ ] Add voting sessions with configurable vote limits.
+- [ ] Add a simple timer for workshops.
+- [ ] Add presenter/facilitator mode for focusing the room on one card or section.
+- [ ] Add guest/share-link UI placeholders that explain what will require backend support later.
 
 ### Prompt to implement
 
@@ -206,10 +238,10 @@ Add local collaboration features to StickyStack. Implement note comments, board 
 
 ### Acceptance tests
 
-- Comments can be added, edited, and deleted on a note.
-- Voting can start, stop, and display totals.
-- Votes persist after refresh.
-- Facilitator focus mode highlights one card or section.
+- [ ] Comments can be added, edited, and deleted on a note.
+- [ ] Voting can start, stop, and display totals.
+- [ ] Votes persist after refresh.
+- [ ] Facilitator focus mode highlights one card or section.
 
 ### Suggested checks
 
@@ -218,7 +250,15 @@ npm run check
 npm run build
 ```
 
+### Completion checklist
+
+- [ ] `npm run check` passes.
+- [ ] `npm run build` passes.
+- [ ] README or docs describe local collaboration features.
+
 ## Phase 6 — Import, export, and offline sharing
+
+**Status:** [ ] Not started
 
 ### Why
 
@@ -226,11 +266,11 @@ Teams need to preserve workshop output and share snapshots with stakeholders who
 
 ### Build
 
-- Export boards to JSON for backup and re-import.
-- Export boards to CSV for spreadsheet review.
-- Add browser print styles for PDF export.
-- Add import validation and conflict handling.
-- Add sample data import for demos.
+- [ ] Export boards to JSON for backup and re-import.
+- [ ] Export boards to CSV for spreadsheet review.
+- [ ] Add browser print styles for PDF export.
+- [ ] Add import validation and conflict handling.
+- [ ] Add sample data import for demos.
 
 ### Prompt to implement
 
@@ -240,10 +280,10 @@ Implement board import and export. Add JSON backup export/import, CSV export for
 
 ### Acceptance tests
 
-- Exported JSON can be imported into a clean browser and reproduce the board.
-- CSV contains one row per note with key metadata.
-- Print/PDF view is readable for kanban and story-map boards.
-- Invalid import files show clear errors and do not corrupt existing boards.
+- [ ] Exported JSON can be imported into a clean browser and reproduce the board.
+- [ ] CSV contains one row per note with key metadata.
+- [ ] Print/PDF view is readable for kanban and story-map boards.
+- [ ] Invalid import files show clear errors and do not corrupt existing boards.
 
 ### Suggested checks
 
@@ -252,7 +292,15 @@ npm run check
 npm run build
 ```
 
+### Completion checklist
+
+- [ ] `npm run check` passes.
+- [ ] `npm run build` passes.
+- [ ] README or docs describe import, export, and print sharing.
+
 ## Phase 7 — Backend persistence, accounts, workspaces, and permissions
+
+**Status:** [ ] Not started
 
 ### Why
 
@@ -260,12 +308,12 @@ Real collaboration, sharing, private boards, viewers, and auditability require s
 
 ### Build
 
-- Choose a backend path, such as Firebase/Supabase for speed or a custom API for control.
-- Add user accounts and workspace membership.
-- Add roles: owner, editor, viewer, and guest.
-- Move projects from `localStorage` into backend storage.
-- Keep a local cache for offline resilience.
-- Add migration/export path from existing local data.
+- [ ] Choose a backend path, such as Firebase/Supabase for speed or a custom API for control.
+- [ ] Add user accounts and workspace membership.
+- [ ] Add roles: owner, editor, viewer, and guest.
+- [ ] Move projects from `localStorage` into backend storage.
+- [ ] Keep a local cache for offline resilience.
+- [ ] Add migration/export path from existing local data.
 
 ### Prompt to implement
 
@@ -275,10 +323,10 @@ Add backend-backed workspaces to StickyStack. Introduce authentication, workspac
 
 ### Acceptance tests
 
-- Users can sign in and see only their workspace boards.
-- Editors can change boards; viewers cannot.
-- Existing local projects can be migrated after sign-in.
-- Signing out does not expose private boards.
+- [ ] Users can sign in and see only their workspace boards.
+- [ ] Editors can change boards; viewers cannot.
+- [ ] Existing local projects can be migrated after sign-in.
+- [ ] Signing out does not expose private boards.
 
 ### Suggested checks
 
@@ -287,7 +335,15 @@ npm run check
 npm run build
 ```
 
+### Completion checklist
+
+- [ ] `npm run check` passes.
+- [ ] `npm run build` passes.
+- [ ] README or docs describe backend workspaces, roles, and local migration.
+
 ## Phase 8 — Real-time collaboration and guest access
+
+**Status:** [ ] Not started
 
 ### Why
 
@@ -295,11 +351,11 @@ The application should support remote workshops where multiple people edit the s
 
 ### Build
 
-- Add real-time board updates through WebSockets, Firebase, Supabase Realtime, or a similar mechanism.
-- Show collaborator cursors or presence indicators.
-- Add optimistic updates and conflict handling.
-- Add guest links with scoped access and expiration.
-- Add activity history for recent board changes.
+- [ ] Add real-time board updates through WebSockets, Firebase, Supabase Realtime, or a similar mechanism.
+- [ ] Show collaborator cursors or presence indicators.
+- [ ] Add optimistic updates and conflict handling.
+- [ ] Add guest links with scoped access and expiration.
+- [ ] Add activity history for recent board changes.
 
 ### Prompt to implement
 
@@ -309,10 +365,10 @@ Implement real-time collaboration. Add presence indicators, live card and board 
 
 ### Acceptance tests
 
-- Two browser sessions see note changes without refreshing.
-- Presence indicators show active collaborators.
-- Guest links can be created, used, revoked, and expired.
-- Permission rules still apply during real-time updates.
+- [ ] Two browser sessions see note changes without refreshing.
+- [ ] Presence indicators show active collaborators.
+- [ ] Guest links can be created, used, revoked, and expired.
+- [ ] Permission rules still apply during real-time updates.
 
 ### Suggested checks
 
@@ -321,7 +377,15 @@ npm run check
 npm run build
 ```
 
+### Completion checklist
+
+- [ ] `npm run check` passes.
+- [ ] `npm run build` passes.
+- [ ] README or docs describe real-time collaboration and guest access.
+
 ## Phase 9 — Integrations and API
+
+**Status:** [ ] Not started
 
 ### Why
 
@@ -329,12 +393,12 @@ Product discovery boards become more valuable when they connect to execution too
 
 ### Build
 
-- Start with one integration, preferably Jira or GitHub Issues, before adding more.
-- Add an integration abstraction around external work items.
-- Map StickyStack notes to external issues or cards.
-- Support one-way import first, then controlled two-way sync.
-- Add webhook processing for external changes.
-- Add an internal REST API for enterprise-style automation.
+- [ ] Start with one integration, preferably Jira or GitHub Issues, before adding more.
+- [ ] Add an integration abstraction around external work items.
+- [ ] Map StickyStack notes to external issues or cards.
+- [ ] Support one-way import first, then controlled two-way sync.
+- [ ] Add webhook processing for external changes.
+- [ ] Add an internal REST API for enterprise-style automation.
 
 ### Prompt to implement
 
@@ -344,10 +408,10 @@ Add the first delivery-tool integration to StickyStack. Create an integration ab
 
 ### Acceptance tests
 
-- Users can connect a provider in a test environment.
-- External items import as notes with source metadata.
-- Re-import updates matched notes instead of duplicating them.
-- Integration failures are visible and recoverable.
+- [ ] Users can connect a provider in a test environment.
+- [ ] External items import as notes with source metadata.
+- [ ] Re-import updates matched notes instead of duplicating them.
+- [ ] Integration failures are visible and recoverable.
 
 ### Suggested checks
 
@@ -356,7 +420,15 @@ npm run check
 npm run build
 ```
 
+### Completion checklist
+
+- [ ] `npm run check` passes.
+- [ ] `npm run build` passes.
+- [ ] README or docs describe the first integration and API direction.
+
 ## Phase 10 — Enterprise polish and operational readiness
+
+**Status:** [ ] Not started
 
 ### Why
 
@@ -364,12 +436,12 @@ After core product-market fit, the app needs trust, observability, and admin cap
 
 ### Build
 
-- Add workspace audit logs.
-- Add admin insights, such as active boards, contributors, and stale boards.
-- Add SSO/SAML only if customer demand justifies it.
-- Add backup/restore documentation.
-- Add accessibility audits for keyboard navigation, screen readers, and contrast.
-- Add end-to-end tests for critical flows.
+- [ ] Add workspace audit logs.
+- [ ] Add admin insights, such as active boards, contributors, and stale boards.
+- [ ] Add SSO/SAML only if customer demand justifies it.
+- [ ] Add backup/restore documentation.
+- [ ] Add accessibility audits for keyboard navigation, screen readers, and contrast.
+- [ ] Add end-to-end tests for critical flows.
 
 ### Prompt to implement
 
@@ -379,10 +451,10 @@ Add enterprise readiness features to StickyStack. Implement workspace audit logs
 
 ### Acceptance tests
 
-- Admins can inspect key workspace activity.
-- Keyboard users can create, edit, move, and delete notes.
-- Critical user flows are covered by automated tests.
-- Backup and restore steps are documented and verified.
+- [ ] Admins can inspect key workspace activity.
+- [ ] Keyboard users can create, edit, move, and delete notes.
+- [ ] Critical user flows are covered by automated tests.
+- [ ] Backup and restore steps are documented and verified.
 
 ### Suggested checks
 
@@ -391,20 +463,26 @@ npm run check
 npm run build
 ```
 
+### Completion checklist
+
+- [ ] `npm run check` passes.
+- [ ] `npm run build` passes.
+- [ ] README or docs describe enterprise readiness, accessibility, and backup/restore.
+
 ## Recommended prompt order
 
 Use these prompts one at a time, only moving forward after checks pass:
 
-1. Board templates.
-2. Story-map layout.
-3. Rich card metadata and filters.
-4. Board links and dependencies.
-5. Local collaboration features.
-6. Import/export.
-7. Backend workspaces and permissions.
-8. Real-time collaboration.
-9. First integration.
-10. Enterprise polish.
+1. [x] Board templates.
+2. [ ] Story-map layout.
+3. [ ] Rich card metadata and filters.
+4. [ ] Board links and dependencies.
+5. [ ] Local collaboration features.
+6. [ ] Import/export.
+7. [ ] Backend workspaces and permissions.
+8. [ ] Real-time collaboration.
+9. [ ] First integration.
+10. [ ] Enterprise polish.
 
 ## Suggested test strategy
 
@@ -419,9 +497,9 @@ Use these prompts one at a time, only moving forward after checks pass:
 
 A phase is complete only when:
 
-- The feature is available from the UI.
-- Existing boards still load.
-- Data persists after refresh.
-- Smoke checks and production build pass.
-- The README or docs describe how to use the new capability.
-- The next prompt in this roadmap can be run without reworking the previous phase.
+- [ ] The feature is available from the UI.
+- [ ] Existing boards still load.
+- [ ] Data persists after refresh.
+- [ ] Smoke checks and production build pass.
+- [ ] The README or docs describe how to use the new capability.
+- [ ] The next prompt in this roadmap can be run without reworking the previous phase.

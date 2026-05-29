@@ -36,12 +36,17 @@ required_component_ts = [
     "standalone: true",
     "FormsModule",
     "localStorage",
+    "projectTemplates",
+    "templateType",
+    "migrateState",
     "notesForLane",
     "updateNoteStatus",
     "project.notes = project.notes.filter",
 ]
 required_component_html = [
     "*ngFor=\"let project of projects",
+    "name=\"projectTemplate\"",
+    "template-badge",
     "id=\"project-modal\"",
     "id=\"lane-modal\"",
     "id=\"note-modal\"",
@@ -53,6 +58,14 @@ required_css = [
     "transform: rotateY(180deg)",
     ".lane-board",
     ".project-note",
+]
+required_templates = [
+    "Simple Kanban",
+    "User Story Map",
+    "Product Roadmap",
+    "Opportunity Canvas",
+    "Sailboat Retro",
+    "2x2 Prioritization Matrix",
 ]
 
 for dependency in required_package:
@@ -72,6 +85,8 @@ for token in required_component_html:
     assert token in app_html, f"Missing Angular template hook: {token}"
 for token in required_css:
     assert token in css, f"Missing CSS behavior: {token}"
+for template in required_templates:
+    assert template in app_ts, f"Missing project template: {template}"
 
 for selector in [
     "<app-header",

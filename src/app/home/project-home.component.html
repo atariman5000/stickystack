@@ -20,13 +20,17 @@
         [style.--tilt]="projectTilt(index)"
         (click)="projectSelected.emit(project.id)"
       >
+        <span class="template-badge">{{ templateLabel(project) }}</span>
         <h3>{{ project.name }}</h3>
         <p>
           {{ project.description || "Click to open this project board." }}
         </p>
+        <small class="project-template-description">
+          {{ templateDescription(project) }}
+        </small>
         <span class="project-note-meta"
           >{{ project.notes.length }} notes ·
-          {{ project.lanes.length }} lanes</span
+          {{ project.lanes.length }} sections</span
         >
       </button>
     </ng-container>
