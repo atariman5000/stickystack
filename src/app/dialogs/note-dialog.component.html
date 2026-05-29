@@ -17,6 +17,14 @@
       </button>
     </div>
     <input name="noteId" [(ngModel)]="noteForm.id" type="hidden" />
+    <input name="noteParentId" [(ngModel)]="noteForm.parentId" type="hidden" />
+    <input name="noteRow" [(ngModel)]="noteForm.row" type="hidden" />
+    <input name="noteColumn" [(ngModel)]="noteForm.column" type="hidden" />
+    <input name="noteSortOrder" [(ngModel)]="noteForm.sortOrder" type="hidden" />
+    <input name="noteCardType" [(ngModel)]="noteForm.cardType" type="hidden" />
+    <p *ngIf="isStoryMap" class="form-context">
+      {{ cardTypeLabel(noteForm.cardType) }} card
+    </p>
     <label>
       Front description
       <input
@@ -38,7 +46,7 @@
     </label>
     <div class="form-row">
       <label>
-        Status / swim lane
+        {{ isStoryMap ? "Release slice" : "Status / swim lane" }}
         <select name="noteStatus" [(ngModel)]="noteForm.status">
           <option
             *ngFor="let status of lanes"

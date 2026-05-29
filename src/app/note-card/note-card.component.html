@@ -19,6 +19,7 @@
         (click)="$event.stopPropagation()"
       >
         <select
+          *ngIf="showStatus"
           class="note-status"
           [ngModel]="note.status"
           (ngModelChange)="statusChanged.emit($event)"
@@ -58,6 +59,7 @@
         (click)="$event.stopPropagation()"
       >
         <select
+          *ngIf="showStatus"
           class="note-status"
           [ngModel]="note.status"
           (ngModelChange)="statusChanged.emit($event)"

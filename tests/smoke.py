@@ -38,8 +38,15 @@ required_component_ts = [
     "localStorage",
     "projectTemplates",
     "templateType",
+    "defaultReleaseSlices",
+    "releaseSlices",
+    "cardType",
+    "parentId",
     "migrateState",
     "notesForLane",
+    "activities(project",
+    "storiesForTask",
+    "renameReleaseSlice",
     "updateNoteStatus",
     "project.notes = project.notes.filter",
 ]
@@ -52,11 +59,17 @@ required_component_html = [
     "id=\"note-modal\"",
     "id=\"project-grid\"",
     "id=\"lane-board\"",
+    "id=\"story-map-board\"",
+    "Add activity",
+    "Add user tasks under this activity.",
+    "Release slice",
     "[(ngModel)]",
 ]
 required_css = [
     "transform: rotateY(180deg)",
     ".lane-board",
+    ".story-map-board",
+    ".release-cell",
     ".project-note",
 ]
 required_templates = [

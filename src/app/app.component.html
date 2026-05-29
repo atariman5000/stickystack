@@ -23,6 +23,8 @@
       (noteFlipped)="toggleNoteFlip($event)"
       (noteStatusChanged)="updateNoteStatus($event.note, $event.status)"
       (noteEdited)="openNoteForm($event)"
+      (noteCreated)="openNoteForm(undefined, $event)"
+      (releaseSliceRenamed)="renameReleaseSlice($event)"
       (noteDeleted)="deleteNote(project, $event)"
     ></app-project-board>
   </main>
@@ -40,6 +42,7 @@
 
 <app-note-dialog
   #noteDialog
-  [lanes]="activeProject?.lanes ?? []"
+  [lanes]="activeProject?.templateType === 'storyMap' ? activeProject?.releaseSlices ?? [] : activeProject?.lanes ?? []"
+  [isStoryMap]="activeProject?.templateType === 'storyMap'"
   (noteSaved)="saveNote($event)"
 ></app-note-dialog>

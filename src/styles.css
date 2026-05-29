@@ -194,6 +194,153 @@ button:hover { transform: translateY(-2px); }
 .lane-count { display: inline-grid; place-items: center; min-width: 34px; height: 34px; border-radius: 50%; background: white; font-weight: 800; }
 
 .note-stack { display: grid; gap: 16px; }
+app-note-card {
+  display: block;
+}
+.story-map-board {
+  --story-map-card-width: 280px;
+  --story-map-backbone-height: 570px;
+  --story-map-release-height: 340px;
+  display: grid;
+  gap: 18px;
+  overflow-x: auto;
+  padding: 4px 2px 18px;
+}
+.story-map-toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: center;
+  min-width: 720px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.62);
+}
+.story-map-toolbar h3 { margin-bottom: 4px; }
+.story-map-toolbar p { margin-bottom: 0; color: var(--muted); }
+.story-map-grid {
+  display: grid;
+  grid-auto-columns: max-content;
+  grid-auto-flow: column;
+  gap: 18px;
+  align-items: start;
+  min-width: max-content;
+}
+.release-column,
+.activity-column {
+  display: grid;
+  gap: 12px;
+}
+.release-column {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  width: 190px;
+}
+.story-map-corner,
+.release-label,
+.story-placeholder {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.78);
+}
+.story-map-corner {
+  display: grid;
+  min-height: var(--story-map-backbone-height);
+  place-items: center;
+  padding: 14px;
+  color: var(--muted);
+  font-weight: 900;
+  text-align: center;
+}
+.release-label {
+  display: grid;
+  gap: 8px;
+  height: var(--story-map-release-height);
+  padding: 12px;
+  align-content: start;
+}
+.release-label input {
+  border-radius: 12px;
+  padding: 9px 10px;
+  font-weight: 900;
+}
+.release-label span {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+.activity-column {
+  padding: 14px;
+  border: 1px dashed rgba(23, 32, 51, 0.18);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.48);
+  width: max-content;
+}
+.activity-column > app-note-card,
+.activity-column > .add-task-button {
+  width: var(--story-map-card-width);
+}
+.task-grid {
+  display: grid;
+  grid-auto-columns: var(--story-map-card-width);
+  grid-auto-flow: column;
+  gap: 12px;
+  align-items: start;
+}
+.task-column {
+  display: grid;
+  gap: 12px;
+  padding-top: 4px;
+}
+.release-cell {
+  display: grid;
+  gap: 10px;
+  height: var(--story-map-release-height);
+  padding: 12px;
+  border: 1px dashed rgba(23, 32, 51, 0.14);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.5);
+  align-content: start;
+  overflow-y: auto;
+  transition: border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
+}
+.release-cell.drag-over {
+  border-color: rgba(23, 32, 51, 0.42);
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: inset 0 0 0 2px rgba(148, 217, 255, 0.5);
+}
+.story-placeholder {
+  padding: 16px;
+  color: var(--muted);
+  font-weight: 800;
+  text-align: center;
+}
+.story-map-empty {
+  min-width: 720px;
+}
+.add-task-button,
+.add-story-button {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+}
+.story-map-board .note-card {
+  min-height: 240px;
+}
+.story-map-board .release-cell .note-card {
+  min-height: 260px;
+}
+.story-map-board .note-face {
+  padding: 16px;
+}
+.story-map-board .note-card h3 {
+  font-size: 1.28rem;
+}
+.story-map-board .note-card p {
+  font-size: 0.95rem;
+}
 .note-focus-backdrop {
   position: fixed;
   inset: 0;
@@ -252,6 +399,7 @@ textarea { min-height: 120px; resize: vertical; }
 .template-preview:empty { display: none; }
 .template-preview strong { color: var(--ink); }
 .template-preview small { line-height: 1.35; }
+.form-context { margin-bottom: 0; color: var(--muted); font-weight: 900; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .full { width: 100%; }
 
@@ -263,5 +411,7 @@ textarea { min-height: 120px; resize: vertical; }
   .header-actions { justify-content: stretch; }
   .header-actions button { flex: 1 1 160px; }
   .lane-board { grid-auto-flow: row; grid-template-columns: 1fr; }
+  .story-map-toolbar, .story-map-empty { min-width: 0; }
+  .story-map-grid { min-width: 720px; }
   .form-row { grid-template-columns: 1fr; }
 }

@@ -6,8 +6,8 @@ import { NoteDialogComponent } from './dialogs/note-dialog.component';
 import { ProjectBoardComponent } from './board/project-board.component';
 import { ProjectDialogComponent } from './dialogs/project-dialog.component';
 import { ProjectHomeComponent } from './home/project-home.component';
-import { STORAGE_KEY, defaultLanes, projectTemplates } from './app.constants';
-import { BoardType, NoteFormModel, Project, ProjectFormModel, StickyNote, StickyStackState } from './models';
+import { STORAGE_KEY, defaultLanes, defaultReleaseSlices, projectTemplates } from './app.constants';
+import { BoardType, NoteCreationContext, NoteFormModel, Project, ProjectFormModel, StickyNote, StickyStackState } from './models';
 
 @Component({
   selector: 'app-root',
@@ -73,6 +73,7 @@ export class AppComponent {
       color: projectForm.color,
       templateType: template.type,
       lanes: [...template.lanes],
+      releaseSlices: template.type === 'storyMap' ? [...defaultReleaseSlices] : [],
       notes: []
     };
 
@@ -90,6 +91,10 @@ export class AppComponent {
       return;
     }
 
+    if (project.templateType === 'storyMap' && !project.releaseSlices.some((candidate) => candidate.toLowerCase() === lane.toLowerCase())) {
+      project.releaseSlices.push(lane);
+    }
+
     if (!project.lanes.some((candidate) => candidate.toLowerCase() === lane.toLowerCase())) {
       project.lanes.push(lane);
     }
@@ -97,12 +102,12 @@ export class AppComponent {
     this.saveState();
   }
 
-  openNoteForm(note?: StickyNote): void {
+  openNoteForm(note?: StickyNote, context?: NoteCreationContext): void {
     if (!this.activeProject) {
       return;
     }
 
-    this.noteDialog?.open(note);
+    this.noteDialog?.open(note, context);
   }
 
   saveNote(noteForm: NoteFormModel): void {
@@ -115,7 +120,12 @@ export class AppComponent {
       title: noteForm.title,
       details: noteForm.details,
       status: noteForm.status,
-      color: noteForm.color
+      color: noteForm.color,
+      parentId: noteForm.parentId,
+      row: noteForm.row,
+      column: noteForm.column,
+      sortOrder: noteForm.sortOrder,
+      cardType: noteForm.cardType
     };
 
     if (noteForm.id) {
@@ -127,6 +137,23 @@ export class AppComponent {
       project.notes.push({ id: crypto.randomUUID(), ...payload });
     }
 
+    this.saveState();
+  }
+
+  renameReleaseSlice(event: { from: string; to: string }): void {
+    const project = this.activeProject;
+    const nextName = event.to.trim();
+    if (!project || !nextName || project.releaseSlices.some((slice) => slice.toLowerCase() === nextName.toLowerCase() && slice !== event.from)) {
+      return;
+    }
+
+    project.releaseSlices = project.releaseSlices.map((slice) => slice === event.from ? nextName : slice);
+    project.lanes = project.lanes.map((lane) => lane === event.from ? nextName : lane);
+    project.notes.forEach((note) => {
+      if (note.status === event.from) {
+        note.status = nextName;
+      }
+    });
     this.saveState();
   }
 
@@ -154,7 +181,19 @@ export class AppComponent {
   }
 
   deleteNote(project: Project, note: StickyNote): void {
-    project.notes = project.notes.filter((candidate) => candidate.id !== note.id);
+    const removedIds = new Set([note.id]);
+    let foundDescendant = true;
+    while (foundDescendant) {
+      foundDescendant = false;
+      project.notes.forEach((candidate) => {
+        if (candidate.parentId && removedIds.has(candidate.parentId) && !removedIds.has(candidate.id)) {
+          removedIds.add(candidate.id);
+          foundDescendant = true;
+        }
+      });
+    }
+
+    project.notes = project.notes.filter((candidate) => !removedIds.has(candidate.id));
     this.flippedNoteIds.delete(note.id);
     this.saveState();
   }
@@ -183,27 +222,43 @@ export class AppComponent {
           color: '#fff18a',
           templateType: 'kanban',
           lanes: [...this.templateFor('kanban').lanes],
+          releaseSlices: [],
           notes: [
             {
               id: crypto.randomUUID(),
               title: 'Sketch first board flow',
               details: 'Confirm projects live on the home wall, then click into a board with lanes and task notes.',
               status: 'Backlog',
-              color: '#94d9ff'
+              color: '#94d9ff',
+              parentId: null,
+              row: 0,
+              column: 0,
+              sortOrder: 0,
+              cardType: 'note'
             },
             {
               id: crypto.randomUUID(),
               title: 'Test flip animation',
               details: 'Click any note to flip from the short description to the detail side. Click again to return.',
               status: 'In Progress',
-              color: '#ff9fc9'
+              color: '#ff9fc9',
+              parentId: null,
+              row: 0,
+              column: 0,
+              sortOrder: 1,
+              cardType: 'note'
             },
             {
               id: crypto.randomUUID(),
               title: 'Move by status',
               details: 'Use the status selector on a note to automatically send it to the matching swim lane.',
               status: 'Done',
-              color: '#adf0b6'
+              color: '#adf0b6',
+              parentId: null,
+              row: 0,
+              column: 0,
+              sortOrder: 2,
+              cardType: 'note'
             }
           ]
         }
@@ -221,7 +276,8 @@ export class AppComponent {
 
   private migrateProject(project: Partial<Project>): Project {
     const template = this.templateFor(project.templateType);
-    const lanes = this.migrateLanes(project.lanes, template.lanes);
+    const lanes = this.migrateLanes(project.lanes, template.lanes, template.type);
+    const releaseSlices = this.migrateReleaseSlices(project.releaseSlices, template.type === 'storyMap' ? lanes : []);
 
     return {
       id: project.id || crypto.randomUUID(),
@@ -230,11 +286,16 @@ export class AppComponent {
       color: project.color || '#fff18a',
       templateType: template.type,
       lanes,
-      notes: this.migrateNotes(project.notes, lanes)
+      releaseSlices,
+      notes: this.migrateNotes(project.notes, template.type === 'storyMap' ? releaseSlices : lanes, template.type)
     };
   }
 
-  private migrateLanes(lanes: unknown, fallbackLanes: string[]): string[] {
+  private migrateLanes(lanes: unknown, fallbackLanes: string[], boardType: BoardType): string[] {
+    if (boardType === 'storyMap') {
+      return [...fallbackLanes];
+    }
+
     if (Array.isArray(lanes) && lanes.every((lane) => typeof lane === 'string') && lanes.length) {
       return lanes;
     }
@@ -242,13 +303,21 @@ export class AppComponent {
     return [...fallbackLanes];
   }
 
-  private migrateNotes(notes: unknown, lanes: string[]): StickyNote[] {
+  private migrateReleaseSlices(releaseSlices: unknown, fallbackSlices: string[]): string[] {
+    if (Array.isArray(releaseSlices) && releaseSlices.every((slice) => typeof slice === 'string') && releaseSlices.length) {
+      return releaseSlices;
+    }
+
+    return fallbackSlices.length ? [...fallbackSlices] : [];
+  }
+
+  private migrateNotes(notes: unknown, lanes: string[], boardType: BoardType): StickyNote[] {
     if (!Array.isArray(notes)) {
       return [];
     }
 
     const fallbackStatus = lanes[0] ?? defaultLanes[0];
-    return notes.map((note) => {
+    return notes.map((note, index) => {
       const savedNote = note as Partial<StickyNote>;
 
       return {
@@ -256,7 +325,12 @@ export class AppComponent {
         title: savedNote.title || 'Untitled note',
         details: savedNote.details || '',
         status: savedNote.status || fallbackStatus,
-        color: savedNote.color || '#fff18a'
+        color: savedNote.color || '#fff18a',
+        parentId: savedNote.parentId ?? null,
+        row: typeof savedNote.row === 'number' && Number.isFinite(savedNote.row) ? savedNote.row : 0,
+        column: typeof savedNote.column === 'number' && Number.isFinite(savedNote.column) ? savedNote.column : 0,
+        sortOrder: typeof savedNote.sortOrder === 'number' && Number.isFinite(savedNote.sortOrder) ? savedNote.sortOrder : index,
+        cardType: savedNote.cardType || (boardType === 'storyMap' ? 'story' : 'note')
       };
     });
   }

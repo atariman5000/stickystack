@@ -81,7 +81,7 @@ npm run build
 
 ## Phase 2 — Story-map layout and release slices
 
-**Status:** [ ] Not started
+**Status:** [x] Complete
 
 ### Why
 
@@ -89,13 +89,13 @@ The most important CardBoard-style differentiator is a story map: a user journey
 
 ### Build
 
-- [ ] Add hierarchy fields to notes, such as `parentId`, `row`, `column`, `sortOrder`, and `cardType`.
-- [ ] Support activities or backbone items.
-- [ ] Support user tasks.
-- [ ] Support stories or implementation notes.
-- [ ] Add horizontal release dividers or slices, such as `MVP`, `Release 1`, and `Later`.
-- [ ] Allow notes to be moved within the map without losing their hierarchy.
-- [ ] Add an empty-state helper that explains how to build a story map.
+- [x] Add hierarchy fields to notes, such as `parentId`, `row`, `column`, `sortOrder`, and `cardType`.
+- [x] Support activities or backbone items.
+- [x] Support user tasks.
+- [x] Support stories or implementation notes.
+- [x] Add horizontal release dividers or slices, such as `MVP`, `Release 1`, and `Later`.
+- [x] Allow notes to be moved within the map without losing their hierarchy.
+- [x] Add an empty-state helper that explains how to build a story map.
 
 ### Prompt to implement
 
@@ -105,10 +105,10 @@ Implement the Story Map board experience. Extend notes with hierarchy and orderi
 
 ### Acceptance tests
 
-- [ ] Story-map boards render in columns instead of status lanes.
-- [ ] Notes can be added under a selected activity or task.
-- [ ] Release slices appear and can be renamed.
-- [ ] Existing kanban boards are unaffected.
+- [x] Story-map boards render in columns instead of status lanes.
+- [x] Notes can be added under a selected activity or task.
+- [x] Release slices appear and can be renamed.
+- [x] Existing kanban boards are unaffected.
 
 ### Suggested checks
 
@@ -119,9 +119,9 @@ npm run build
 
 ### Completion checklist
 
-- [ ] `npm run check` passes.
-- [ ] `npm run build` passes.
-- [ ] README or docs describe the story-map capability.
+- [x] `npm run check` passes.
+- [x] `npm run build` passes.
+- [x] README or docs describe the story-map capability.
 
 ## Phase 3 — Rich card backs, attachments, tags, and estimates
 
@@ -474,7 +474,7 @@ npm run build
 Use these prompts one at a time, only moving forward after checks pass:
 
 1. [x] Board templates.
-2. [ ] Story-map layout.
+2. [x] Story-map layout.
 3. [ ] Rich card metadata and filters.
 4. [ ] Board links and dependencies.
 5. [ ] Local collaboration features.

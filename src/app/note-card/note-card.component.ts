@@ -14,6 +14,7 @@ export class NoteCardComponent {
   @Input({ required: true }) lanes: string[] = [];
   @Input({ required: true }) isFlipped = false;
   @Input() isDragging = false;
+  @Input() showStatus = true;
 
   @Output() flipped = new EventEmitter<void>();
   @Output() dragStarted = new EventEmitter<void>();

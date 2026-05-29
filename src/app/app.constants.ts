@@ -2,6 +2,7 @@ import { PaletteColor, ProjectTemplate } from './models';
 
 export const STORAGE_KEY = 'stickystack.prototype.v1';
 export const defaultLanes = ['Backlog', 'In Progress', 'Done'];
+export const defaultReleaseSlices = ['MVP', 'Release 1', 'Later'];
 export const projectTemplates: ProjectTemplate[] = [
   {
     type: 'kanban',
@@ -13,7 +14,7 @@ export const projectTemplates: ProjectTemplate[] = [
     type: 'storyMap',
     label: 'User Story Map',
     description: 'Map user activities, tasks, stories, and release slices.',
-    lanes: ['Activities', 'User Tasks', 'Stories', 'Release Slices']
+    lanes: [...defaultReleaseSlices]
   },
   {
     type: 'roadmap',
