@@ -2,13 +2,21 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-package_json = json.loads((ROOT / "package.json").read_text())
-angular_json = json.loads((ROOT / "angular.json").read_text())
-index_html = (ROOT / "index.html").read_text()
-main_ts = (ROOT / "src" / "main.ts").read_text()
-component_ts = (ROOT / "src" / "app" / "app.component.ts").read_text()
-component_html = (ROOT / "src" / "app" / "app.component.html").read_text()
-css = (ROOT / "src" / "styles.css").read_text()
+
+
+def read(path):
+    return path.read_text(encoding="utf-8")
+
+
+package_json = json.loads(read(ROOT / "package.json"))
+angular_json = json.loads(read(ROOT / "angular.json"))
+index_html = read(ROOT / "index.html")
+main_ts = read(ROOT / "src" / "main.ts")
+component_ts = read(ROOT / "src" / "app" / "app.component.ts")
+component_html = read(ROOT / "src" / "app" / "app.component.html")
+app_ts = "\n".join(read(path) for path in (ROOT / "src" / "app").rglob("*.ts"))
+app_html = "\n".join(read(path) for path in (ROOT / "src" / "app").rglob("*.html"))
+css = read(ROOT / "src" / "styles.css")
 
 required_package = [
     "@angular/core",
@@ -33,7 +41,7 @@ required_component_ts = [
     "project.notes = project.notes.filter",
 ]
 required_component_html = [
-    "*ngFor=\"let project of state.projects",
+    "*ngFor=\"let project of projects",
     "id=\"project-modal\"",
     "id=\"lane-modal\"",
     "id=\"note-modal\"",
@@ -59,11 +67,21 @@ for token in required_index:
 for token in required_main:
     assert token in main_ts, f"Missing Angular bootstrap token: {token}"
 for token in required_component_ts:
-    assert token in component_ts, f"Missing Angular component behavior: {token}"
+    assert token in app_ts, f"Missing Angular component behavior: {token}"
 for token in required_component_html:
-    assert token in component_html, f"Missing Angular template hook: {token}"
+    assert token in app_html, f"Missing Angular template hook: {token}"
 for token in required_css:
     assert token in css, f"Missing CSS behavior: {token}"
+
+for selector in [
+    "<app-header",
+    "<app-project-home",
+    "<app-project-board",
+    "<app-project-dialog",
+    "<app-lane-dialog",
+    "<app-note-dialog",
+]:
+    assert selector in component_html, f"Root component should compose {selector}"
 
 assert not (ROOT / "app.js").exists(), "Legacy DOM app.js should be removed after Angular conversion"
 

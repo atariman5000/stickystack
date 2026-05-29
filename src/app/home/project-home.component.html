@@ -1,0 +1,42 @@
+<section
+  id="home-view"
+  class="view active"
+  aria-labelledby="projects-heading"
+>
+  <div class="section-heading">
+    <div>
+      <h2 id="projects-heading">Projects</h2>
+      <p>Each project starts as a sticky note on your home wall.</p>
+    </div>
+  </div>
+
+  <div id="project-grid" class="sticky-grid">
+    <ng-container *ngIf="projects.length; else noProjects">
+      <button
+        *ngFor="let project of projects; let index = index"
+        class="project-note"
+        type="button"
+        [style.background]="project.color"
+        [style.--tilt]="projectTilt(index)"
+        (click)="projectSelected.emit(project.id)"
+      >
+        <h3>{{ project.name }}</h3>
+        <p>
+          {{ project.description || "Click to open this project board." }}
+        </p>
+        <span class="project-note-meta"
+          >{{ project.notes.length }} notes ·
+          {{ project.lanes.length }} lanes</span
+        >
+      </button>
+    </ng-container>
+  </div>
+</section>
+
+<ng-template #noProjects>
+  <div class="empty-state">
+    <div class="empty-stack" aria-hidden="true"></div>
+    <h3>No projects yet</h3>
+    <p>Create a sticky-note project to start shaping your board.</p>
+  </div>
+</ng-template>

@@ -1,0 +1,62 @@
+<dialog #noteModal id="note-modal" class="modal">
+  <form
+    #noteFormRef="ngForm"
+    method="dialog"
+    class="modal-card"
+    (ngSubmit)="saveNote(noteFormRef)"
+  >
+    <div class="modal-header">
+      <h2 id="note-modal-title">{{ noteModalTitle }}</h2>
+      <button
+        class="icon-button"
+        type="button"
+        aria-label="Close note form"
+        (click)="closeDialog()"
+      >
+        ×
+      </button>
+    </div>
+    <input name="noteId" [(ngModel)]="noteForm.id" type="hidden" />
+    <label>
+      Front description
+      <input
+        name="noteTitle"
+        [(ngModel)]="noteForm.title"
+        required
+        maxlength="72"
+        placeholder="Draft user interview script"
+      />
+    </label>
+    <label>
+      Back details
+      <textarea
+        name="noteDetails"
+        [(ngModel)]="noteForm.details"
+        maxlength="320"
+        placeholder="Prompts, acceptance criteria, links, or next steps"
+      ></textarea>
+    </label>
+    <div class="form-row">
+      <label>
+        Status / swim lane
+        <select name="noteStatus" [(ngModel)]="noteForm.status">
+          <option
+            *ngFor="let status of lanes"
+            [value]="status"
+          >
+            {{ status }}
+          </option>
+        </select>
+      </label>
+      <label>
+        Note color
+        <select name="noteColor" [(ngModel)]="noteForm.color">
+          <option *ngFor="let color of palette" [value]="color.value">
+            {{ color.name }}
+          </option>
+        </select>
+      </label>
+    </div>
+    <button class="accent full" type="submit">Save note</button>
+  </form>
+</dialog>

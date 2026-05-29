@@ -1,0 +1,86 @@
+<article
+  class="note-card"
+  [class.flipped]="isFlipped"
+  (click)="flipped.emit()"
+>
+  <div class="note-inner">
+    <div
+      class="note-face note-front"
+      [style.background]="note.color"
+    >
+      <h3>{{ note.title }}</h3>
+      <p>Click to flip for details.</p>
+      <div
+        class="note-actions"
+        (click)="$event.stopPropagation()"
+      >
+        <select
+          class="note-status"
+          [ngModel]="note.status"
+          (ngModelChange)="statusChanged.emit($event)"
+          [attr.aria-label]="'Move ' + note.title + ' to status'"
+        >
+          <option
+            *ngFor="let status of lanes"
+            [value]="status"
+          >
+            {{ status }}
+          </option>
+        </select>
+        <button
+          class="mini-button"
+          type="button"
+          (click)="edited.emit()"
+        >
+          Edit
+        </button>
+        <button
+          class="danger"
+          type="button"
+          (click)="deleted.emit()"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+    <div
+      class="note-face note-back"
+      [style.background]="note.color"
+    >
+      <h3>Details</h3>
+      <p>{{ note.details || "No extra details yet." }}</p>
+      <div
+        class="note-actions"
+        (click)="$event.stopPropagation()"
+      >
+        <select
+          class="note-status"
+          [ngModel]="note.status"
+          (ngModelChange)="statusChanged.emit($event)"
+          [attr.aria-label]="'Move ' + note.title + ' to status'"
+        >
+          <option
+            *ngFor="let status of lanes"
+            [value]="status"
+          >
+            {{ status }}
+          </option>
+        </select>
+        <button
+          class="mini-button"
+          type="button"
+          (click)="edited.emit()"
+        >
+          Edit
+        </button>
+        <button
+          class="danger"
+          type="button"
+          (click)="deleted.emit()"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</article>

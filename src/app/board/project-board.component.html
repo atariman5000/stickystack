@@ -1,0 +1,51 @@
+<section
+  id="board-view"
+  class="view active"
+  aria-labelledby="board-heading"
+>
+  <div class="section-heading board-meta">
+    <div>
+      <p class="eyebrow">Active project</p>
+      <h2 id="board-heading">{{ project.name }}</h2>
+      <p id="board-description">
+        {{
+          project.description ||
+            "A flexible sticky-note board for this project."
+        }}
+      </p>
+    </div>
+    <div id="board-stats" class="stats">
+      <span class="stat-pill">{{ project.notes.length }} notes</span>
+      <span class="stat-pill">{{ project.lanes.length }} swim lanes</span>
+      <span class="stat-pill">{{ doneCount(project) }} done</span>
+    </div>
+  </div>
+
+  <div id="lane-board" class="lane-board" aria-live="polite">
+    <section *ngFor="let lane of project.lanes" class="lane">
+      <div class="lane-header">
+        <h3 class="lane-title">{{ lane }}</h3>
+        <span class="lane-count">{{
+          notesForLane(project, lane).length
+        }}</span>
+      </div>
+      <div class="note-stack">
+        <ng-container *ngIf="notesForLane(project, lane) as laneNotes">
+          <p *ngIf="!laneNotes.length" class="lane-placeholder">
+            No notes in this lane yet.
+          </p>
+          <app-note-card
+            *ngFor="let note of laneNotes"
+            [note]="note"
+            [lanes]="project.lanes"
+            [isFlipped]="isNoteFlipped(note.id)"
+            (flipped)="noteFlipped.emit(note.id)"
+            (statusChanged)="noteStatusChanged.emit({ note, status: $event })"
+            (edited)="noteEdited.emit(note)"
+            (deleted)="noteDeleted.emit(note)"
+          ></app-note-card>
+        </ng-container>
+      </div>
+    </section>
+  </div>
+</section>

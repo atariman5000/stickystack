@@ -1,0 +1,45 @@
+<header class="hero">
+  <div>
+    <p class="eyebrow">StickyStack prototype</p>
+    <h1 id="page-title">{{ pageTitle }}</h1>
+    <p id="page-subtitle" class="subtitle">{{ pageSubtitle }}</p>
+  </div>
+  <div class="header-actions">
+    <button
+      *ngIf="isBoardView"
+      id="back-home"
+      class="ghost"
+      type="button"
+      (click)="homeSelected.emit()"
+    >
+      ← Projects
+    </button>
+    <button
+      *ngIf="!isBoardView"
+      id="open-project-modal"
+      class="primary"
+      type="button"
+      (click)="projectFormRequested.emit()"
+    >
+      + New project
+    </button>
+    <button
+      *ngIf="isBoardView"
+      id="open-lane-modal"
+      class="primary"
+      type="button"
+      (click)="laneFormRequested.emit()"
+    >
+      + Add swim lane
+    </button>
+    <button
+      *ngIf="isBoardView"
+      id="open-note-modal"
+      class="accent"
+      type="button"
+      (click)="noteFormRequested.emit()"
+    >
+      + Add note
+    </button>
+  </div>
+</header>

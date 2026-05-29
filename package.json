@@ -4,7 +4,7 @@
   "private": true,
   "description": "An Angular sticky-note project board prototype with swim lanes and animated note flips.",
   "scripts": {
-    "start": "ng serve --host 0.0.0.0 --port 4173",
+    "start": "ng serve",
     "build": "ng build",
     "check": "python3 -m py_compile tests/smoke.py && python3 tests/smoke.py"
   },

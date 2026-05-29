@@ -1,0 +1,48 @@
+<dialog #projectModal id="project-modal" class="modal">
+  <form
+    #projectFormRef="ngForm"
+    method="dialog"
+    class="modal-card"
+    (ngSubmit)="createProject(projectFormRef)"
+  >
+    <div class="modal-header">
+      <h2>Create project</h2>
+      <button
+        class="icon-button"
+        type="button"
+        aria-label="Close project form"
+        (click)="closeDialog()"
+      >
+        ×
+      </button>
+    </div>
+    <label>
+      Project name
+      <input
+        name="projectName"
+        [(ngModel)]="projectForm.name"
+        required
+        maxlength="48"
+        placeholder="Launch plan"
+      />
+    </label>
+    <label>
+      Project description
+      <textarea
+        name="projectDescription"
+        [(ngModel)]="projectForm.description"
+        maxlength="180"
+        placeholder="A short note about the board goal"
+      ></textarea>
+    </label>
+    <label>
+      Sticky color
+      <select name="projectColor" [(ngModel)]="projectForm.color">
+        <option *ngFor="let color of palette" [value]="color.value">
+          {{ color.name }}
+        </option>
+      </select>
+    </label>
+    <button class="primary full" type="submit">Create project</button>
+  </form>
+</dialog>
