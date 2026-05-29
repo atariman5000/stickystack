@@ -20,6 +20,10 @@ npm run build
 npm run check
 ```
 
+## Product roadmap
+
+See [`docs/cardboardit-parity-roadmap.md`](docs/cardboardit-parity-roadmap.md) for the step-by-step CardBoard-inspired implementation plan, including prompts, acceptance criteria, and checks for each phase.
+
 ## Prototype scope
 
 - Create projects from the home wall.
