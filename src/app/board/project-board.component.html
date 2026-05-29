@@ -3,6 +3,12 @@
   class="view active"
   aria-labelledby="board-heading"
 >
+  <div
+    *ngIf="flippedNoteIds.size"
+    class="note-focus-backdrop"
+    aria-hidden="true"
+  ></div>
+
   <div class="section-heading board-meta">
     <div>
       <p class="eyebrow">Active project</p>

@@ -191,6 +191,13 @@ button:hover { transform: translateY(-2px); }
 .lane-count { display: inline-grid; place-items: center; min-width: 34px; height: 34px; border-radius: 50%; background: white; font-weight: 800; }
 
 .note-stack { display: grid; gap: 16px; }
+.note-focus-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 15;
+  background: rgba(255, 255, 255, 0.34);
+  backdrop-filter: blur(16px) saturate(1.22);
+}
 .note-card { min-height: 282px; perspective: 1000px; cursor: grab; }
 .note-card.flipped {
   position: fixed;
