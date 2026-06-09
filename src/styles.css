@@ -378,11 +378,13 @@ app-note-card {
 }
 
 .note-actions { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin-top: auto; padding-top: 14px; align-items: center; font-family: Inter, sans-serif; }
+.note-actions-front { display: flex; justify-content: flex-end; }
 .note-status { width: 100%; border: 1px solid rgba(47, 41, 26, 0.18); border-radius: 14px; padding: 8px 10px; background: rgba(255,255,255,0.58); font-weight: 700; }
 .note-status { grid-column: 1 / -1; }
 .mini-button, .danger { padding: 8px 11px; font-size: 0.8rem; }
 .mini-button { background: rgba(255,255,255,0.62); color: #2f291a; }
 .danger { justify-self: end; background: #ffe1e1; color: #9a2626; }
+.icon-danger { display: inline-grid; width: 36px; height: 36px; padding: 0; place-items: center; font-size: 1rem; line-height: 1; }
 
 .stats { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
 .stat-pill { padding: 10px 13px; border-radius: 999px; background: white; font-weight: 800; color: var(--muted); }
