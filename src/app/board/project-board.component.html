@@ -3,11 +3,12 @@
   class="view active"
   aria-labelledby="board-heading"
 >
-  <div
-    *ngIf="flippedNoteIds.size"
-    class="note-focus-backdrop"
-    aria-hidden="true"
-  ></div>
+  @if (flippedNoteIds.size) {
+    <div
+      class="note-focus-backdrop"
+      aria-hidden="true"
+    ></div>
+  }
 
   <div class="section-heading board-meta">
     <div>
@@ -28,159 +29,167 @@
     </div>
   </div>
 
-  <div
-    *ngIf="project.templateType === 'storyMap'; else laneBoard"
-    id="story-map-board"
-    class="story-map-board"
-    aria-live="polite"
-  >
-    <div class="story-map-toolbar">
-      <div>
-        <h3>Story map</h3>
-        <p>Build a journey from activities to user tasks, then place stories into release slices.</p>
-      </div>
-      <button class="primary" type="button" (click)="createActivity(project)">
-        + Add activity
-      </button>
-    </div>
-
-    <div *ngIf="!activities(project).length" class="empty-state story-map-empty">
-      <div class="empty-stack" aria-hidden="true"></div>
-      <h3>Start with the backbone</h3>
-      <p>Add activities for the user's journey, then add tasks and stories under each activity.</p>
-    </div>
-
-    <div *ngIf="activities(project).length" class="story-map-grid">
-      <div class="release-column">
-        <div class="story-map-corner">Release slices</div>
-        <div
-          *ngFor="let releaseSlice of project.releaseSlices"
-          class="release-label"
-        >
-          <input
-            [ngModel]="releaseSlice"
-            (blur)="renameReleaseSlice(releaseSlice, $any($event.target).value)"
-            [attr.aria-label]="'Rename release slice ' + releaseSlice"
-          />
-          <span>{{ storyCount(project, releaseSlice) }} stories</span>
-        </div>
-      </div>
-
-      <section
-        *ngFor="let activity of activities(project)"
-        class="activity-column"
-      >
-        <app-note-card
-          [note]="activity"
-          [lanes]="project.releaseSlices"
-          [isFlipped]="isNoteFlipped(activity.id)"
-          [isDragging]="draggedNoteId === activity.id"
-          [showStatus]="false"
-          (flipped)="noteFlipped.emit(activity.id)"
-          (dragStarted)="startNoteDrag(activity.id)"
-          (dragEnded)="endNoteDrag()"
-          (statusChanged)="noteStatusChanged.emit({ note: activity, status: $event })"
-          (edited)="noteEdited.emit(activity)"
-          (deleted)="noteDeleted.emit(activity)"
-        ></app-note-card>
-
-        <button class="ghost add-task-button" type="button" (click)="createTask(project, activity)">
-          + Add task
-        </button>
-
-        <div *ngIf="!tasksForActivity(project, activity.id).length" class="story-placeholder">
-          Add user tasks under this activity.
-        </div>
-
-        <div class="task-grid">
-          <div
-            *ngFor="let task of tasksForActivity(project, activity.id)"
-            class="task-column"
-          >
-            <app-note-card
-              [note]="task"
-              [lanes]="project.releaseSlices"
-              [isFlipped]="isNoteFlipped(task.id)"
-              [isDragging]="draggedNoteId === task.id"
-              [showStatus]="false"
-              (flipped)="noteFlipped.emit(task.id)"
-              (dragStarted)="startNoteDrag(task.id)"
-              (dragEnded)="endNoteDrag()"
-              (statusChanged)="noteStatusChanged.emit({ note: task, status: $event })"
-              (edited)="noteEdited.emit(task)"
-              (deleted)="noteDeleted.emit(task)"
-            ></app-note-card>
-
-            <div
-              *ngFor="let releaseSlice of project.releaseSlices"
-              class="release-cell"
-              [class.drag-over]="dragOverLane === releaseSlice"
-              (dragover)="allowLaneDrop($event, releaseSlice)"
-              (dragleave)="leaveLane($event, releaseSlice)"
-              (drop)="dropNoteInReleaseSlice($event, releaseSlice)"
-            >
-              <ng-container *ngIf="storiesForTask(project, task.id, releaseSlice) as stories">
-                <app-note-card
-                  *ngFor="let story of stories"
-                  [note]="story"
-                  [lanes]="project.releaseSlices"
-                  [isFlipped]="isNoteFlipped(story.id)"
-                  [isDragging]="draggedNoteId === story.id"
-                  (flipped)="noteFlipped.emit(story.id)"
-                  (dragStarted)="startNoteDrag(story.id)"
-                  (dragEnded)="endNoteDrag()"
-                  (statusChanged)="noteStatusChanged.emit({ note: story, status: $event })"
-                  (edited)="noteEdited.emit(story)"
-                  (deleted)="noteDeleted.emit(story)"
-                ></app-note-card>
-                <button class="mini-button add-story-button" type="button" (click)="createStory(project, task, releaseSlice)">
-                  + Story
-                </button>
-              </ng-container>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
-  </div>
-
-  <ng-template #laneBoard>
-  <div id="lane-board" class="lane-board" aria-live="polite">
-    <section
-      *ngFor="let lane of project.lanes"
-      class="lane"
-      [class.drag-over]="dragOverLane === lane"
-      (dragover)="allowLaneDrop($event, lane)"
-      (dragleave)="leaveLane($event, lane)"
-      (drop)="dropNoteInLane($event, lane)"
+  @if (project.templateType === 'storyMap') {
+    <div
+      id="story-map-board"
+      class="story-map-board"
+      aria-live="polite"
     >
-      <div class="lane-header">
-        <h3 class="lane-title">{{ lane }}</h3>
-        <span class="lane-count">{{
-          notesForLane(project, lane).length
-        }}</span>
+      <div class="story-map-toolbar">
+        <div>
+          <h3>Story map</h3>
+          <p>Build a journey from activities to user tasks, then place stories into release slices.</p>
+        </div>
+        <button class="primary" type="button" (click)="createActivity(project)">
+          + Add activity
+        </button>
       </div>
-      <div class="note-stack">
-        <ng-container *ngIf="notesForLane(project, lane) as laneNotes">
-          <p *ngIf="!laneNotes.length" class="lane-placeholder">
-            No notes in this lane yet.
-          </p>
-          <app-note-card
-            *ngFor="let note of laneNotes"
-            [note]="note"
-            [lanes]="project.lanes"
-            [isFlipped]="isNoteFlipped(note.id)"
-            [isDragging]="draggedNoteId === note.id"
-            (flipped)="noteFlipped.emit(note.id)"
-            (dragStarted)="startNoteDrag(note.id)"
-            (dragEnded)="endNoteDrag()"
-            (statusChanged)="noteStatusChanged.emit({ note, status: $event })"
-            (edited)="noteEdited.emit(note)"
-            (deleted)="noteDeleted.emit(note)"
-          ></app-note-card>
-        </ng-container>
-      </div>
-    </section>
-  </div>
-  </ng-template>
+
+      @if (!activities(project).length) {
+        <div class="empty-state story-map-empty">
+          <div class="empty-stack" aria-hidden="true"></div>
+          <h3>Start with the backbone</h3>
+          <p>Add activities for the user's journey, then add tasks and stories under each activity.</p>
+        </div>
+      }
+
+      @if (activities(project).length) {
+        <div class="story-map-grid">
+          <div class="release-column">
+            <div class="story-map-corner">Release slices</div>
+            @for (releaseSlice of project.releaseSlices; track releaseSlice) {
+              <div class="release-label">
+                <input
+                  [ngModel]="releaseSlice"
+                  (blur)="renameReleaseSlice(releaseSlice, $any($event.target).value)"
+                  [attr.aria-label]="'Rename release slice ' + releaseSlice"
+                />
+                <span>{{ storyCount(project, releaseSlice) }} stories</span>
+              </div>
+            }
+          </div>
+
+          @for (activity of activities(project); track activity.id) {
+            <section class="activity-column">
+              <app-note-card
+                [note]="activity"
+                [lanes]="project.releaseSlices"
+                [isFlipped]="isNoteFlipped(activity.id)"
+                [isDragging]="draggedNoteId === activity.id"
+                [showStatus]="false"
+                (flipped)="noteFlipped.emit(activity.id)"
+                (dragStarted)="startNoteDrag(activity.id)"
+                (dragEnded)="endNoteDrag()"
+                (statusChanged)="noteStatusChanged.emit({ note: activity, status: $event })"
+                (edited)="noteEdited.emit(activity)"
+                (deleted)="noteDeleted.emit(activity)"
+              ></app-note-card>
+
+              <button class="ghost add-task-button" type="button" (click)="createTask(project, activity)">
+                + Add task
+              </button>
+
+              @if (!tasksForActivity(project, activity.id).length) {
+                <div class="story-placeholder">
+                  Add user tasks under this activity.
+                </div>
+              }
+
+              <div class="task-grid">
+                @for (task of tasksForActivity(project, activity.id); track task.id) {
+                  <div class="task-column">
+                    <app-note-card
+                      [note]="task"
+                      [lanes]="project.releaseSlices"
+                      [isFlipped]="isNoteFlipped(task.id)"
+                      [isDragging]="draggedNoteId === task.id"
+                      [showStatus]="false"
+                      (flipped)="noteFlipped.emit(task.id)"
+                      (dragStarted)="startNoteDrag(task.id)"
+                      (dragEnded)="endNoteDrag()"
+                      (statusChanged)="noteStatusChanged.emit({ note: task, status: $event })"
+                      (edited)="noteEdited.emit(task)"
+                      (deleted)="noteDeleted.emit(task)"
+                    ></app-note-card>
+
+                    @for (releaseSlice of project.releaseSlices; track releaseSlice) {
+                      <div
+                        class="release-cell"
+                        [class.drag-over]="dragOverLane === releaseSlice"
+                        (dragover)="allowLaneDrop($event, releaseSlice)"
+                        (dragleave)="leaveLane($event, releaseSlice)"
+                        (drop)="dropNoteInReleaseSlice($event, releaseSlice)"
+                      >
+                        @if (storiesForTask(project, task.id, releaseSlice); as stories) {
+                          @for (story of stories; track story.id) {
+                            <app-note-card
+                              [note]="story"
+                              [lanes]="project.releaseSlices"
+                              [isFlipped]="isNoteFlipped(story.id)"
+                              [isDragging]="draggedNoteId === story.id"
+                              (flipped)="noteFlipped.emit(story.id)"
+                              (dragStarted)="startNoteDrag(story.id)"
+                              (dragEnded)="endNoteDrag()"
+                              (statusChanged)="noteStatusChanged.emit({ note: story, status: $event })"
+                              (edited)="noteEdited.emit(story)"
+                              (deleted)="noteDeleted.emit(story)"
+                            ></app-note-card>
+                          }
+                          <button class="mini-button add-story-button" type="button" (click)="createStory(project, task, releaseSlice)">
+                            + Story
+                          </button>
+                        }
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </section>
+          }
+        </div>
+      }
+    </div>
+  } @else {
+    <div id="lane-board" class="lane-board" aria-live="polite">
+      @for (lane of project.lanes; track lane) {
+        <section
+          class="lane"
+          [class.drag-over]="dragOverLane === lane"
+          (dragover)="allowLaneDrop($event, lane)"
+          (dragleave)="leaveLane($event, lane)"
+          (drop)="dropNoteInLane($event, lane)"
+        >
+          <div class="lane-header">
+            <h3 class="lane-title">{{ lane }}</h3>
+            <span class="lane-count">{{
+              notesForLane(project, lane).length
+            }}</span>
+          </div>
+          <div class="note-stack">
+            @if (notesForLane(project, lane); as laneNotes) {
+              @if (!laneNotes.length) {
+                <p class="lane-placeholder">
+                  No notes in this lane yet.
+                </p>
+              }
+              @for (note of laneNotes; track note.id) {
+                <app-note-card
+                  [note]="note"
+                  [lanes]="project.lanes"
+                  [isFlipped]="isNoteFlipped(note.id)"
+                  [isDragging]="draggedNoteId === note.id"
+                  (flipped)="noteFlipped.emit(note.id)"
+                  (dragStarted)="startNoteDrag(note.id)"
+                  (dragEnded)="endNoteDrag()"
+                  (statusChanged)="noteStatusChanged.emit({ note, status: $event })"
+                  (edited)="noteEdited.emit(note)"
+                  (deleted)="noteDeleted.emit(note)"
+                ></app-note-card>
+              }
+            }
+          </div>
+        </section>
+      }
+    </div>
+  }
 </section>

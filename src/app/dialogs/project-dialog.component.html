@@ -38,24 +38,30 @@
     <label>
       Board template
       <select name="projectTemplate" [(ngModel)]="projectForm.templateType" required>
-        <option *ngFor="let template of projectTemplates" [value]="template.type">
-          {{ template.label }}
-        </option>
+        @for (template of projectTemplates; track template.type) {
+          <option [value]="template.type">
+            {{ template.label }}
+          </option>
+        }
       </select>
     </label>
-    <div class="template-preview" *ngFor="let template of projectTemplates">
-      <ng-container *ngIf="template.type === projectForm.templateType">
-        <strong>{{ template.label }}</strong>
-        <span>{{ template.description }}</span>
-        <small>{{ template.lanes.join(" · ") }}</small>
-      </ng-container>
-    </div>
+    @for (template of projectTemplates; track template.type) {
+      <div class="template-preview">
+        @if (template.type === projectForm.templateType) {
+          <strong>{{ template.label }}</strong>
+          <span>{{ template.description }}</span>
+          <small>{{ template.lanes.join(" · ") }}</small>
+        }
+      </div>
+    }
     <label>
       Sticky color
       <select name="projectColor" [(ngModel)]="projectForm.color">
-        <option *ngFor="let color of palette" [value]="color.value">
-          {{ color.name }}
-        </option>
+        @for (color of palette; track color.value) {
+          <option [value]="color.value">
+            {{ color.name }}
+          </option>
+        }
       </select>
     </label>
     <button class="primary full" type="submit">Create project</button>

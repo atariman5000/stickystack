@@ -51,7 +51,7 @@ required_component_ts = [
     "project.notes = project.notes.filter",
 ]
 required_component_html = [
-    "*ngFor=\"let project of projects",
+    "@for (project of projects; track project.id",
     "name=\"projectTemplate\"",
     "template-badge",
     "id=\"project-modal\"",
@@ -64,6 +64,13 @@ required_component_html = [
     "Add user tasks under this activity.",
     "Release slice",
     "[(ngModel)]",
+]
+deprecated_control_flow = [
+    "*ngIf",
+    "*ngFor",
+    "*ngSwitch",
+    "ngSwitchCase",
+    "ngSwitchDefault",
 ]
 required_css = [
     "transform: rotateY(180deg)",
@@ -96,6 +103,8 @@ for token in required_component_ts:
     assert token in app_ts, f"Missing Angular component behavior: {token}"
 for token in required_component_html:
     assert token in app_html, f"Missing Angular template hook: {token}"
+for token in deprecated_control_flow:
+    assert token not in app_html, f"Deprecated Angular control-flow syntax should not be used: {token}"
 for token in required_css:
     assert token in css, f"Missing CSS behavior: {token}"
 for template in required_templates:

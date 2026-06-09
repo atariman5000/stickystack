@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { palette, projectTemplates } from '../app.constants';
@@ -7,7 +6,7 @@ import { ProjectFormModel } from '../models';
 @Component({
   selector: 'app-project-dialog',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
   templateUrl: './project-dialog.component.html'
 })
 export class ProjectDialogComponent {

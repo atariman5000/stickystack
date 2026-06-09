@@ -22,9 +22,11 @@
     <input name="noteColumn" [(ngModel)]="noteForm.column" type="hidden" />
     <input name="noteSortOrder" [(ngModel)]="noteForm.sortOrder" type="hidden" />
     <input name="noteCardType" [(ngModel)]="noteForm.cardType" type="hidden" />
-    <p *ngIf="isStoryMap" class="form-context">
-      {{ cardTypeLabel(noteForm.cardType) }} card
-    </p>
+    @if (isStoryMap) {
+      <p class="form-context">
+        {{ cardTypeLabel(noteForm.cardType) }} card
+      </p>
+    }
     <label>
       Front description
       <input
@@ -48,20 +50,21 @@
       <label>
         {{ isStoryMap ? "Release slice" : "Status / swim lane" }}
         <select name="noteStatus" [(ngModel)]="noteForm.status">
-          <option
-            *ngFor="let status of lanes"
-            [value]="status"
-          >
-            {{ status }}
-          </option>
+          @for (status of lanes; track status) {
+            <option [value]="status">
+              {{ status }}
+            </option>
+          }
         </select>
       </label>
       <label>
         Note color
         <select name="noteColor" [(ngModel)]="noteForm.color">
-          <option *ngFor="let color of palette" [value]="color.value">
-            {{ color.name }}
-          </option>
+          @for (color of palette; track color.value) {
+            <option [value]="color.value">
+              {{ color.name }}
+            </option>
+          }
         </select>
       </label>
     </div>

@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NoteCardComponent } from '../note-card/note-card.component';
@@ -8,7 +7,7 @@ import { NoteCreationContext, Project, StickyNote } from '../models';
 @Component({
   selector: 'app-project-board',
   standalone: true,
-  imports: [CommonModule, FormsModule, NoteCardComponent],
+  imports: [FormsModule, NoteCardComponent],
   templateUrl: './project-board.component.html'
 })
 export class ProjectBoardComponent {

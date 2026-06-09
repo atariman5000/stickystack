@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { defaultLanes, palette } from '../app.constants';
@@ -7,7 +6,7 @@ import { NoteCreationContext, NoteFormModel, StickyNote } from '../models';
 @Component({
   selector: 'app-note-dialog',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
   templateUrl: './note-dialog.component.html'
 })
 export class NoteDialogComponent {

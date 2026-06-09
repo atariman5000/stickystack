@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { AppHeaderComponent } from './header/app-header.component';
 import { LaneDialogComponent } from './dialogs/lane-dialog.component';
@@ -9,11 +8,15 @@ import { ProjectHomeComponent } from './home/project-home.component';
 import { STORAGE_KEY, defaultLanes, defaultReleaseSlices, projectTemplates } from './app.constants';
 import { BoardType, NoteCreationContext, NoteFormModel, Project, ProjectFormModel, StickyNote, StickyStackState } from './models';
 
+interface PendingNoteDeletion {
+  projectId: string;
+  noteId: string;
+}
+
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
-    CommonModule,
     AppHeaderComponent,
     LaneDialogComponent,
     NoteDialogComponent,
@@ -31,6 +34,7 @@ export class AppComponent {
   state = this.loadState();
   activeProjectId: string | null = null;
   flippedNoteIds = new Set<string>();
+  pendingDeletion: PendingNoteDeletion | null = null;
 
   get activeProject(): Project | undefined {
     return this.state.projects.find((project) => project.id === this.activeProjectId);
@@ -48,6 +52,33 @@ export class AppComponent {
     return this.activeProject
       ? 'Flip notes for details, change status to move them, and add lanes as your workflow evolves.'
       : 'Create a project, jump into its board, and move color-coded tasks through custom swim lanes.';
+  }
+
+  get pendingDeleteProject(): Project | undefined {
+    if (!this.pendingDeletion) {
+      return undefined;
+    }
+
+    return this.state.projects.find((project) => project.id === this.pendingDeletion?.projectId);
+  }
+
+  get pendingDeleteNote(): StickyNote | undefined {
+    const project = this.pendingDeleteProject;
+    if (!project || !this.pendingDeletion) {
+      return undefined;
+    }
+
+    return project.notes.find((note) => note.id === this.pendingDeletion?.noteId);
+  }
+
+  get pendingDeleteDescendantCount(): number {
+    const project = this.pendingDeleteProject;
+    const note = this.pendingDeleteNote;
+    if (!project || !note) {
+      return 0;
+    }
+
+    return this.noteAndDescendantIds(project, note).size - 1;
   }
 
   showHome(): void {
@@ -180,7 +211,35 @@ export class AppComponent {
     this.saveState();
   }
 
-  deleteNote(project: Project, note: StickyNote): void {
+  requestNoteDeletion(project: Project, note: StickyNote): void {
+    this.pendingDeletion = {
+      projectId: project.id,
+      noteId: note.id
+    };
+  }
+
+  cancelNoteDeletion(): void {
+    this.pendingDeletion = null;
+  }
+
+  confirmNoteDeletion(): void {
+    const project = this.pendingDeleteProject;
+    const note = this.pendingDeleteNote;
+    if (project && note) {
+      this.deleteNote(project, note);
+    }
+
+    this.pendingDeletion = null;
+  }
+
+  private deleteNote(project: Project, note: StickyNote): void {
+    const removedIds = this.noteAndDescendantIds(project, note);
+    project.notes = project.notes.filter((candidate) => !removedIds.has(candidate.id));
+    removedIds.forEach((noteId) => this.flippedNoteIds.delete(noteId));
+    this.saveState();
+  }
+
+  private noteAndDescendantIds(project: Project, note: StickyNote): Set<string> {
     const removedIds = new Set([note.id]);
     let foundDescendant = true;
     while (foundDescendant) {
@@ -193,9 +252,7 @@ export class AppComponent {
       });
     }
 
-    project.notes = project.notes.filter((candidate) => !removedIds.has(candidate.id));
-    this.flippedNoteIds.delete(note.id);
-    this.saveState();
+    return removedIds;
   }
 
   private loadState(): StickyStackState {

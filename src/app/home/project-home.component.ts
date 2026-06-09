@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { projectTemplates } from '../app.constants';
 import { Project } from '../models';
@@ -6,7 +5,6 @@ import { Project } from '../models';
 @Component({
   selector: 'app-project-home',
   standalone: true,
-  imports: [CommonModule],
   templateUrl: './project-home.component.html'
 })
 export class ProjectHomeComponent {

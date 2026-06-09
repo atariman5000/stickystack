@@ -8,10 +8,7 @@
   (dragend)="handleDragEnd()"
 >
   <div class="note-inner">
-    <div
-      class="note-face note-front"
-      [style.background]="note.color"
-    >
+    <div class="note-face note-front" [style.background]="note.color">
       <h3>{{ note.title }}</h3>
       <p>Click to flip for details.</p>
       <div
@@ -25,51 +22,53 @@
           [attr.aria-label]="'Delete ' + note.title"
           title="Delete"
         >
-          <span aria-hidden="true">🗑️</span>
+          <svg aria-hidden="true" viewBox="0 0 24 24">
+            <path d="M3 6h18" />
+            <path d="M8 6V4h8v2" />
+            <path d="M19 6l-1 14H6L5 6" />
+            <path d="M10 11v5" />
+            <path d="M14 11v5" />
+          </svg>
         </button>
       </div>
     </div>
-    <div
-      class="note-face note-back"
-      [style.background]="note.color"
-    >
-      <h3>Details</h3>
-      <p>{{ note.details || "No extra details yet." }}</p>
-      <div
-        class="note-actions"
-        (click)="$event.stopPropagation()"
-      >
-        <select
-          *ngIf="showStatus"
-          class="note-status"
-          [ngModel]="note.status"
-          (ngModelChange)="statusChanged.emit($event)"
-          [attr.aria-label]="'Move ' + note.title + ' to status'"
-        >
-          <option
-            *ngFor="let status of lanes"
-            [value]="status"
+    @if (isFlipped) {
+      <div class="note-face note-back" [style.background]="note.color">
+        <h3>Details</h3>
+        <p>{{ note.details || "No extra details yet." }}</p>
+        <div class="note-actions" (click)="$event.stopPropagation()">
+          <select
+            class="note-status"
+            [ngModel]="note.status"
+            (ngModelChange)="statusChanged.emit($event)"
+            [attr.aria-label]="'Move ' + note.title + ' to status'"
           >
-            {{ status }}
-          </option>
-        </select>
-        <button
-          class="mini-button"
-          type="button"
-          (click)="edited.emit()"
-        >
-          Edit
-        </button>
-        <button
-          class="danger icon-danger"
-          type="button"
-          (click)="deleted.emit()"
-          [attr.aria-label]="'Delete ' + note.title"
-          title="Delete"
-        >
-          <span aria-hidden="true">🗑️</span>
-        </button>
+            @for (status of lanes; track status) {
+              <option [value]="status">
+                {{ status }}
+              </option>
+            }
+          </select>
+          <button class="mini-button" type="button" (click)="edited.emit()">
+            Edit
+          </button>
+          <button
+            class="danger icon-danger"
+            type="button"
+            (click)="deleted.emit()"
+            [attr.aria-label]="'Delete ' + note.title"
+            title="Delete"
+          >
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M3 6h18" />
+              <path d="M8 6V4h8v2" />
+              <path d="M19 6l-1 14H6L5 6" />
+              <path d="M10 11v5" />
+              <path d="M14 11v5" />
+            </svg>
+          </button>
+        </div>
       </div>
-    </div>
+    }
   </div>
 </article>

@@ -1,13 +1,13 @@
-import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { StickyNote } from '../models';
+import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { StickyNote } from "../models";
+import { JsonPipe } from "@angular/common";
 
 @Component({
-  selector: 'app-note-card',
+  selector: "app-note-card",
   standalone: true,
-  imports: [CommonModule, FormsModule],
-  templateUrl: './note-card.component.html'
+  imports: [FormsModule, JsonPipe],
+  templateUrl: "./note-card.component.html",
 })
 export class NoteCardComponent {
   @Input({ required: true }) note!: StickyNote;
@@ -37,8 +37,8 @@ export class NoteCardComponent {
   handleDragStart(event: DragEvent): void {
     this.didDrag = true;
     if (event.dataTransfer) {
-      event.dataTransfer.effectAllowed = 'move';
-      event.dataTransfer.setData('text/plain', this.note.id);
+      event.dataTransfer.effectAllowed = "move";
+      event.dataTransfer.setData("text/plain", this.note.id);
     }
     this.dragStarted.emit();
   }

@@ -10,25 +10,74 @@
   ></app-header>
 
   <main>
-    <app-project-home
-      *ngIf="!isBoardView"
-      [projects]="state.projects"
-      (projectSelected)="showBoard($event)"
-    ></app-project-home>
+    @if (!isBoardView) {
+      <app-project-home
+        [projects]="state.projects"
+        (projectSelected)="showBoard($event)"
+      ></app-project-home>
+    }
 
-    <app-project-board
-      *ngIf="activeProject as project"
-      [project]="project"
-      [flippedNoteIds]="flippedNoteIds"
-      (noteFlipped)="toggleNoteFlip($event)"
-      (noteStatusChanged)="updateNoteStatus($event.note, $event.status)"
-      (noteEdited)="openNoteForm($event)"
-      (noteCreated)="openNoteForm(undefined, $event)"
-      (releaseSliceRenamed)="renameReleaseSlice($event)"
-      (noteDeleted)="deleteNote(project, $event)"
-    ></app-project-board>
+    @if (activeProject; as project) {
+      <app-project-board
+        [project]="project"
+        [flippedNoteIds]="flippedNoteIds"
+        (noteFlipped)="toggleNoteFlip($event)"
+        (noteStatusChanged)="updateNoteStatus($event.note, $event.status)"
+        (noteEdited)="openNoteForm($event)"
+        (noteCreated)="openNoteForm(undefined, $event)"
+        (releaseSliceRenamed)="renameReleaseSlice($event)"
+        (noteDeleted)="requestNoteDeletion(project, $event)"
+      ></app-project-board>
+    }
   </main>
 </div>
+
+@if (pendingDeleteNote; as note) {
+  <div
+    class="delete-sheet-backdrop"
+    (click)="cancelNoteDeletion()"
+  >
+    <section
+      class="delete-sheet"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="delete-sheet-title"
+      (click)="$event.stopPropagation()"
+    >
+      <div>
+        <p class="eyebrow">Confirm deletion</p>
+        <h2 id="delete-sheet-title">Delete "{{ note.title }}"?</h2>
+        <p>
+          This task will be removed from the board.
+          @if (pendingDeleteDescendantCount) {
+            <span>
+              {{ pendingDeleteDescendantCount }}
+              related
+              {{ pendingDeleteDescendantCount === 1 ? "card" : "cards" }}
+              will also be deleted.
+            </span>
+          }
+        </p>
+      </div>
+      <div class="delete-sheet-actions">
+        <button
+          class="ghost"
+          type="button"
+          (click)="cancelNoteDeletion()"
+        >
+          No, keep it
+        </button>
+        <button
+          class="danger confirm-delete"
+          type="button"
+          (click)="confirmNoteDeletion()"
+        >
+          Yes, delete
+        </button>
+      </div>
+    </section>
+  </div>
+}
 
 <app-project-dialog
   #projectDialog
